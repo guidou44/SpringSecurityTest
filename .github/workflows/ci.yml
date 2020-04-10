@@ -1,4 +1,4 @@
-name: 3dify CI
+name: 3Dify CI
 on:
   push:
     branches:

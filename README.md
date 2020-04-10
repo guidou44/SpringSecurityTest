@@ -1,5 +1,6 @@
 # 3Dify
 ![CI Status](https://github.com/vincentken3d/3Dify/workflows/3Dify%20CI/badge.svg?branch=master)
+![CI Status](https://github.com/guidou44/AlgorithmPresenter/workflows/AlgorithmPresenter%20CI/badge.svg?branch=master)
 
 
 ## Workflows

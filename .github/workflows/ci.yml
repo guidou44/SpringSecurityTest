@@ -1,4 +1,4 @@
-name: AlgorithmPresenter CI
+name: 3dify CI
 on:
   push:
     branches:

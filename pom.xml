@@ -148,6 +148,14 @@
 			<version>${model-mapper-version}</version>
 		</dependency>
 
+		<!-- SASS-->
+		<dependency>
+			<groupId>nl.geodienstencentrum.maven</groupId>
+			<artifactId>sass-maven-plugin</artifactId>
+			<version>3.7.2</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -254,7 +262,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<version>${maven-jar.version}</version>
 			</plugin>
-
 
 
 	</plugins>

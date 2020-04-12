@@ -46,10 +46,10 @@ jobs:
       - name: Generate_Code_Coverage_report
         run: mvn jacoco:report
         
-      #- name: Upload_To_CodeCov
-       # uses: codecov/codecov-action@v1
-        #with:
-         # token: ${{ secrets.CODECOV_TOKEN }}
-          #yml: ./codecov.yml
+      - name: Upload_To_CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          yml: ./codecov.yml
 
 

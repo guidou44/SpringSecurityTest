@@ -269,7 +269,7 @@
 				<version>3.7.2</version>
 				<executions>
 					<execution>
-						<phase>install</phase>
+						<phase>clean</phase>
 						<goals>
 							<goal>update-stylesheets</goal>
 						</goals>

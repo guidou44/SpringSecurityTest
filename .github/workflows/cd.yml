@@ -1,11 +1,11 @@
-name: Deploy master
+name: 3Dify CD
 on:
   push:
     branches:
-    - master
+      - master
     
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
     

@@ -25,6 +25,6 @@ public class PingControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get("/ping"))
         .andExpect(status().isOk())
-        .andExpect(view().name("Index"));
+        .andExpect(view().name("index"));
   }
 }

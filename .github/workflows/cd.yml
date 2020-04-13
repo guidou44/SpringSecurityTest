@@ -24,4 +24,3 @@ jobs:
         environment_name: 3dify-env
         version_label: 0.0.1
         region: us-east-2
-        deployment_package: target/3dfy-0.0.1-SNAPSHOT.jar

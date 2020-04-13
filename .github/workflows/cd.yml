@@ -22,6 +22,6 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: 3dify
         environment_name: 3dify-env
-        version_label: 0.$GITHUB_RUN_NUMBER
+        version_label: 0.${{GITHUB_RUN_NUMBER}}
         region: us-east-2
         deployment_package: target/3dfy-0.0.1-SNAPSHOT.jar

@@ -8,6 +8,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    env:
+      VERSION: 0.0.${{github.run_id}}
     
     - name: Checkout source code
       uses: actions/checkout@v1
@@ -22,6 +24,6 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: 3dify
         environment_name: 3dify-env
-        version_label: 0.${{env.GITHUB_RUN_NUMBER}}
+        version_label: ${VERSION}
         region: us-east-2
         deployment_package: target/3dfy-0.0.1-SNAPSHOT.jar

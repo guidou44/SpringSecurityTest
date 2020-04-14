@@ -263,6 +263,7 @@
 				<version>${maven-jar.version}</version>
 			</plugin>
 
+      <!-- code coverage -->
 			<plugin>
 				<groupId>nl.geodienstencentrum.maven</groupId>
 				<artifactId>sass-maven-plugin</artifactId>
@@ -280,8 +281,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
+      
 	</plugins>
 	</build>
-
 </project>

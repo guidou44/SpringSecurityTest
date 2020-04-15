@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan( {"com.ken3d.threedfy.dal"})
+@ComponentScan("com.ken3d.threedfy.dal")
 public class HibernateConfiguration {
 
   private final Environment env;

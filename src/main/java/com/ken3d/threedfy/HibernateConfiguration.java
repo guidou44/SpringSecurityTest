@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.dal;
+package com.ken3d.threedfy;
 
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -16,8 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource({ "classpath:config/persistence-mysql.properties" })
-@ComponentScan({ "com.ken3d.threedfy.dal" })
+@ComponentScan( {"com.ken3d.threedfy.dal"})
 public class HibernateConfiguration {
 
   private final Environment env;
@@ -40,7 +38,7 @@ public class HibernateConfiguration {
   @Bean
   public DataSource dataSource() {
     BasicDataSource dataSource = new BasicDataSource();
-    dataSource.setDriverClassName("jdbc.driverClassName");
+    dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
     dataSource.setUrl(env.getProperty("jdbc.url"));
     dataSource.setUsername(env.getProperty("jdbc.user"));
     dataSource.setPassword(env.getProperty("jdbc.pass"));
@@ -58,7 +56,8 @@ public class HibernateConfiguration {
   private Properties hibernateProperties() {
     Properties hibernateProperties = new Properties();
     hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-    hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+    hibernateProperties
+        .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
 
     return hibernateProperties;
   }

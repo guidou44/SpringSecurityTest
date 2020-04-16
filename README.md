@@ -16,4 +16,4 @@
 - [AWS hosting](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home?region=us-east-2#/application/overview?applicationName=3dify)
 
 ## Deploy link (Don't over user it plz)
-- [3DIFY](http://3dify-env.eba-4haskfzq.us-east-2.elasticbeanstalk.com/
+- [3DIFY](http://3dify-env.eba-4haskfzq.us-east-2.elasticbeanstalk.com/)

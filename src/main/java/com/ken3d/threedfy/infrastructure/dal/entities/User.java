@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.dal.entities;
+package com.ken3d.threedfy.infrastructure.dal.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

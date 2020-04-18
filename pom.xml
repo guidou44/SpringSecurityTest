@@ -296,23 +296,23 @@
 			</plugin>
 
       <!-- sass -->
-<!--			<plugin>-->
-<!--				<groupId>nl.geodienstencentrum.maven</groupId>-->
-<!--				<artifactId>sass-maven-plugin</artifactId>-->
-<!--				<version>3.7.2</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<phase>clean</phase>-->
-<!--						<goals>-->
-<!--							<goal>update-stylesheets</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<sassSourceDirectory>${basedir}/src/main/resources/static/sass/</sassSourceDirectory>-->
-<!--							<destination>${basedir}/src/main/resources/static/css/</destination>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
+			<plugin>
+				<groupId>nl.geodienstencentrum.maven</groupId>
+				<artifactId>sass-maven-plugin</artifactId>
+				<version>3.7.2</version>
+				<executions>
+					<execution>
+						<phase>clean</phase>
+						<goals>
+							<goal>update-stylesheets</goal>
+						</goals>
+						<configuration>
+							<sassSourceDirectory>${basedir}/src/main/resources/static/sass/</sassSourceDirectory>
+							<destination>${basedir}/src/main/resources/static/css/</destination>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
       
 	</plugins>
 	</build>

@@ -72,6 +72,9 @@
 		<!-- Tomcat-dbcp -->
 		<tomcat-dbcp.version>9.0.1</tomcat-dbcp.version>
 
+		<!-- JFixture version -->
+		<jfixture.version>2.7.2</jfixture.version>
+
 	</properties>
 
 	<dependencies>
@@ -153,7 +156,16 @@
 			<artifactId>junit-jupiter-params</artifactId>
 			<version>${junit-jupiter-params.version}</version>
 			<scope>test</scope>
+		</dependency>+
+
+		<!--JFixture -->
+		<!-- https://mvnrepository.com/artifact/com.flextrade.jfixture/jfixture -->
+		<dependency>
+			<groupId>com.flextrade.jfixture</groupId>
+			<artifactId>jfixture</artifactId>
+			<version>${jfixture.version}</version>
 		</dependency>
+
 
 		<!-- JQuery-->
 		<dependency>

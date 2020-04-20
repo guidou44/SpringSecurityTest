@@ -10,5 +10,10 @@ public class MainController {
   public String getMainPage() {
     return "index";
   }
+
+  @GetMapping("/admin/dashboard")
+  public String getDashboard() {
+    return "dashboard";
+  }
 }
 

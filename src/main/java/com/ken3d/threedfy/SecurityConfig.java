@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().formLogin().loginPage("/login").defaultSuccessUrl("/admin/dashboard");
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().disable().formLogin().loginPage("/login").defaultSuccessUrl("/admin/dashboard");
+  }
 }

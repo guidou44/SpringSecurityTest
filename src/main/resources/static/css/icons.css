@@ -8,8 +8,8 @@ File: Icons Css File
 */
 @font-face {
   font-family: 'unicons';
-  src: url("fonts/unicons.eot?34404611");
-  src: url("fonts/unicons.eot?34404611#iefix") format("embedded-opentype"), url("fonts/unicons.woff2?34404611") format("woff2"), url("fonts/unicons.woff?34404611") format("woff"), url("fonts/unicons.ttf?34404611") format("truetype"), url("fonts/unicons.svg?34404611#unicons") format("svg");
+  src: url("../fonts/unicons.eot?34404611");
+  src: url("../fonts/unicons.eot?34404611#iefix") format("embedded-opentype"), url("../fonts/unicons.woff2?34404611") format("woff2"), url("../fonts/unicons.woff?34404611") format("woff"), url("../fonts/unicons.ttf?34404611") format("truetype"), url("../fonts/unicons.svg?34404611#unicons") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -5392,8 +5392,8 @@ File: Icons Css File
 /* '' */
 @font-face {
   font-family: "dripicons-v2";
-  src: url("fonts/dripicons-v2.eot");
-  src: url("fonts/dripicons-v2.eot?#iefix") format("embedded-opentype"), url("fonts/dripicons-v2.woff") format("woff"), url("fonts/dripicons-v2.ttf") format("truetype"), url("fonts/dripicons-v2.svg#dripicons-v2") format("svg");
+  src: url("../fonts/dripicons-v2.eot");
+  src: url("../fonts/dripicons-v2.eot?#iefix") format("embedded-opentype"), url("../fonts/dripicons-v2.woff") format("woff"), url("../fonts/dripicons-v2.ttf") format("truetype"), url("../fonts/dripicons-v2.svg#dripicons-v2") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -6226,8 +6226,8 @@ File: Icons Css File
 
 @font-face {
   font-family: "Material Design Icons";
-  src: url("/fonts/materialdesignicons-webfont.eot?v=4.9.95");
-  src: url("/fonts/materialdesignicons-webfont.eot?#iefix&v=4.9.95") format("embedded-opentype"), url("/fonts/materialdesignicons-webfont.woff2?v=4.9.95") format("woff2"), url("/fonts/materialdesignicons-webfont.woff?v=4.9.95") format("woff"), url("/fonts/materialdesignicons-webfont.ttf?v=4.9.95") format("truetype");
+  src: url("../fonts/materialdesignicons-webfont.eot?v=4.9.95");
+  src: url("../fonts/materialdesignicons-webfont.eot?#iefix&v=4.9.95") format("embedded-opentype"), url("../fonts/materialdesignicons-webfont.woff2?v=4.9.95") format("woff2"), url("../fonts/materialdesignicons-webfont.woff?v=4.9.95") format("woff"), url("../fonts/materialdesignicons-webfont.ttf?v=4.9.95") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

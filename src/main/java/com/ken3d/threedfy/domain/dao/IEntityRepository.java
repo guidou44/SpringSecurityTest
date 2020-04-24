@@ -4,16 +4,17 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface IEntityRepository<BaseType extends Serializable> {
 
-  <T extends BaseType> Optional<T> select(Class<T> type, final long id);
+  <T extends BaseType> Optional<T> select(Class<T> type, final int id);
 
-  <T extends BaseType> Optional<T> select(Class<T> type, Function<T, Boolean> where);
+  <T extends BaseType> Optional<T> select(Class<T> type, Predicate<T> where);
 
   <T extends BaseType> List<T> selectAll(Class<T> type);
 
-  <T extends BaseType> List<T> selectAll(Class<T> type, Function<T, Boolean> where);
+  <T extends BaseType> List<T> selectAll(Class<T> type, Predicate<T> where);
 
   <T extends BaseType> T create(final T entity);
 
@@ -25,5 +26,5 @@ public interface IEntityRepository<BaseType extends Serializable> {
 
   <T extends BaseType> void delete(final T entity);
 
-  <T extends BaseType> void delete(Class<T> type, final long entityId);
+  <T extends BaseType> void delete(Class<T> type, final int entityId);
 }

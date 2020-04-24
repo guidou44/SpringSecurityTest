@@ -3,7 +3,7 @@ package com.ken3d.threedfy.infrastructure.dal.dao;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,20 +19,21 @@ public abstract class EntityRepositoryBase<BaseType extends Serializable> {
     this.sessionFactory = sessionFactory;
   }
 
-  public <T extends BaseType> Optional<T> select(Class<T> type, final long id) {
+  public <T extends BaseType> Optional<T> select(Class<T> type, final int id) {
     return Optional.ofNullable(getCurrentSession().get(type, id));
   }
 
-  public <T extends BaseType> Optional<T> select(Class<T> type, Function<T, Boolean> where) {
-    return selectAll(type).stream().filter(where::apply).reduce((a, b) -> null);
+  public <T extends BaseType> Optional<T> select(Class<T> type, Predicate<T> where) {
+    List<T> allEntities = selectAll(type, where);
+    return singleOrEmpty(allEntities);
   }
 
   public <T extends BaseType> List<T> selectAll(Class<T> type) {
     return getCurrentSession().createQuery(SELECT_QUERY + type.getName(), type).list();
   }
 
-  public <T extends BaseType> List<T> selectAll(Class<T> type, Function<T, Boolean> where) {
-    return selectAll(type).stream().filter(where::apply).collect(Collectors.toList());
+  public <T extends BaseType> List<T> selectAll(Class<T> type, Predicate<T> where) {
+    return selectAll(type).stream().filter(e -> tryWhere(e, where)).collect(Collectors.toList());
   }
 
   public <T extends BaseType> T create(final T entity) {
@@ -63,11 +64,25 @@ public abstract class EntityRepositoryBase<BaseType extends Serializable> {
     getCurrentSession().delete(entity);
   }
 
-  public <T extends BaseType> void delete(Class<T> type, final long entityId) {
+  public <T extends BaseType> void delete(Class<T> type, final int entityId) {
     select(type, entityId).ifPresent(this::delete);
   }
 
   protected Session getCurrentSession() {
     return sessionFactory.getCurrentSession();
   }
+
+  private <T extends BaseType> Optional<T> singleOrEmpty(List<T> list) {
+    return list.stream().distinct().map(Optional::ofNullable).reduce(Optional.empty(),
+        (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty());
+  }
+
+  private <T extends BaseType> Boolean tryWhere(T entity, Predicate<T> where) {
+    try {
+      return where.test(entity);
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
 }

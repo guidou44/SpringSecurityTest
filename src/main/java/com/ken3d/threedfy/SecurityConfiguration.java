@@ -3,7 +3,9 @@ package com.ken3d.threedfy;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -11,12 +13,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@Profile("!nosecurity")
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private final DataSource dataSource;
 
   @Autowired
-  public SecurityConfig(DataSource dataSource) {
+  public SecurityConfiguration(DataSource dataSource) {
     this.dataSource = dataSource;
   }
 
@@ -27,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .usersByUsernameQuery(
             "SELECT Username,Password_Hash, Enabled FROM User WHERE username=?")
         .authoritiesByUsernameQuery(
-            "SELECT u.Username, ur.Role FROM User_Role as ur JOIN User as u on u.Id = ur.User_FK WHERE u.Username=?");
+            "SELECT u.Username, ur.Role FROM User_Role as "
+                + "ur JOIN User as u on u.Id = ur.User_FK WHERE u.Username=?");
   }
 
   @Override
@@ -39,7 +44,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .httpBasic();
     http.csrf().disable()
-        .formLogin().loginPage("/login")
-        .defaultSuccessUrl("/user/dashboard");
+        .formLogin().loginPage("/login");
   }
 }

@@ -196,10 +196,17 @@
 			<artifactId>sass-maven-plugin</artifactId>
 			<version>3.7.2</version>
 		</dependency>
+
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -326,7 +333,7 @@
 					</execution>
 				</executions>
 			</plugin>
-      
+
 	</plugins>
 	</build>
 </project>

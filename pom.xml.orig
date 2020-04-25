@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.6.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.ken3d</groupId>
+	<artifactId>3dify</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>3dify</name>
+	<description>3d printer management</description>
+
+	<properties>
+
+		<!-- General -->
+		<exec-maven.version>1.2.1</exec-maven.version>
+		<main-class>com.ken3d.threedfy.Application</main-class>
+		<maven-compiler.version>3.8.0</maven-compiler.version>
+		<maven-jar.version>2.4</maven-jar.version>
+		<java.version>1.8</java.version>
+
+		<!-- Make build platform independent -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- logging -->
+		<slf4j-simple.version>1.7.25</slf4j-simple.version>
+
+		<!-- test frameworks -->
+		<junit5.version>5.5.2</junit5.version>
+		<junit-jupiter-params.version>5.4.2</junit-jupiter-params.version>
+		<maven-surefire.version>2.22.1</maven-surefire.version>
+		<mockito-core.version>3.2.4</mockito-core.version>
+		<google-truth.version>1.0.1</google-truth.version>
+
+		<!-- code coverage -->
+		<jacoco-maven.version>0.8.5</jacoco-maven.version>
+
+		<!-- linter -->
+		<checkstyle.version>3.1.0</checkstyle.version>
+
+		<!-- spring -->
+		<spring-cloud.version>Hoxton.SR3</spring-cloud.version>
+
+		<!-- json serialization -->
+		<jackson-databind.version>2.10.1</jackson-databind.version>
+
+		<!-- Bootstrap-->
+		<bootstrap-version>3.3.7</bootstrap-version>
+
+		<!-- JQuery-->
+		<jquery-verison>3.1.0</jquery-verison>
+
+		<!-- model mapper version-->
+		<model-mapper-version>2.3.0</model-mapper-version>
+
+		<!-- spring-boot -->
+		<spring-boot-maven-version>2.2.4.RELEASE</spring-boot-maven-version>
+
+		<!-- rest assured -->
+		<io-rest-assured.version>4.2.0</io-rest-assured.version>
+
+		<!-- Hibernate -->
+		<hibernate.version>5.4.2.Final</hibernate.version>
+
+		<!-- Spring ORM -->
+		<spring-orm.version>5.1.6.RELEASE</spring-orm.version>
+
+		<!-- Tomcat-dbcp -->
+		<tomcat-dbcp.version>9.0.1</tomcat-dbcp.version>
+
+		<!-- JFixture version -->
+		<jfixture.version>2.7.2</jfixture.version>
+
+	</properties>
+
+	<dependencies>
+
+		<!-- Hibernate -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring-orm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-dbcp</artifactId>
+			<version>${tomcat-dbcp.version}</version>
+		</dependency>
+
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- test framework -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit5.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.truth</groupId>
+			<artifactId>truth</artifactId>
+			<version>${google-truth.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit-jupiter-params.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- JFixture-->
+		<dependency>
+			<groupId>com.flextrade.jfixture</groupId>
+			<artifactId>jfixture</artifactId>
+			<version>${jfixture.version}</version>
+		</dependency>
+
+
+		<!-- JQuery -->
+		<dependency>
+			<artifactId>jquery</artifactId>
+			<groupId>org.webjars</groupId>
+			<version>${jquery-verison}</version>
+		</dependency>
+
+		<!-- Bootstrap -->
+		<dependency>
+			<artifactId>bootstrap</artifactId>
+			<groupId>org.webjars</groupId>
+			<version>${bootstrap-version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>junit</artifactId>
+			<groupId>junit</groupId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<artifactId>modelmapper</artifactId>
+			<groupId>org.modelmapper</groupId>
+			<version>${model-mapper-version}</version>
+		</dependency>
+
+		<!-- SASS -->
+		<dependency>
+			<groupId>nl.geodienstencentrum.maven</groupId>
+			<artifactId>sass-maven-plugin</artifactId>
+			<version>3.7.2</version>
+		</dependency>
+
+<<<<<<< HEAD
+=======
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+>>>>>>> master
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+
+			<!-- general -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>${maven-compiler.version}</version>
+			</plugin>
+
+			<plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${main-class}</mainClass>
+				</configuration>
+				<groupId>org.codehaus.mojo</groupId>
+				<version>${exec-maven.version}</version>
+			</plugin>
+			<plugin>
+
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<configuration>
+							<classifier>spring-boot</classifier>
+							<mainClass>
+								com.algorithmpresenter.AlgorithmPresenterApplication
+							</mainClass>
+						</configuration>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<groupId>org.springframework.boot</groupId>
+				<version>${spring-boot-maven-version}</version>
+			</plugin>
+
+			<!-- linter -->
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+					<encoding>UTF-8</encoding>
+				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>${checkstyle.version}</version>
+			</plugin>
+
+			<!-- test -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>${maven-surefire.version}</version>
+			</plugin>
+
+			<!-- code coverage -->
+			<plugin>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<id>generate-code-coverage-report</id>
+						<phase>verify</phase>
+					</execution>
+				</executions>
+				<groupId>org.jacoco</groupId>
+				<version>${jacoco-maven.version}</version>
+			</plugin>
+
+			<plugin>
+				<!-- avoid third parties dependencies duplication
+            warnings -->
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<forceCreation>true</forceCreation>
+				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>${maven-jar.version}</version>
+			</plugin>
+
+      		<!-- sass -->
+			<plugin>
+				<groupId>nl.geodienstencentrum.maven</groupId>
+				<artifactId>sass-maven-plugin</artifactId>
+				<version>3.7.2</version>
+				<executions>
+					<execution>
+						<phase>clean</phase>
+						<goals>
+							<goal>update-stylesheets</goal>
+						</goals>
+						<configuration>
+							<sassSourceDirectory>${basedir}/src/main/resources/static/sass/</sassSourceDirectory>
+							<destination>${basedir}/src/main/resources/static/css/</destination>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+      
+	</plugins>
+	</build>
+</project>

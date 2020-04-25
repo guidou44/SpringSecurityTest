@@ -72,6 +72,9 @@
 		<!-- Tomcat-dbcp -->
 		<tomcat-dbcp.version>9.0.1</tomcat-dbcp.version>
 
+		<!-- JFixture version -->
+		<jfixture.version>2.7.2</jfixture.version>
+
 	</properties>
 
 	<dependencies>
@@ -154,6 +157,13 @@
 			<version>${junit-jupiter-params.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- JFixture-->
+		<dependency>
+			<groupId>com.flextrade.jfixture</groupId>
+			<artifactId>jfixture</artifactId>
+			<version>${jfixture.version}</version>
+		</dependency>
+
 
 		<!-- JQuery-->
 		<dependency>
@@ -162,7 +172,7 @@
 			<version>${jquery-verison}</version>
 		</dependency>
 
-		<!-- Bootstrap-->
+		<!-- Bootstrap -->
 		<dependency>
 			<artifactId>bootstrap</artifactId>
 			<groupId>org.webjars</groupId>
@@ -180,14 +190,17 @@
 			<version>${model-mapper-version}</version>
 		</dependency>
 
-		<!-- SASS-->
+		<!-- SASS -->
 		<dependency>
 			<groupId>nl.geodienstencentrum.maven</groupId>
 			<artifactId>sass-maven-plugin</artifactId>
 			<version>3.7.2</version>
 		</dependency>
-
-
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -295,24 +308,24 @@
 				<version>${maven-jar.version}</version>
 			</plugin>
 
-      <!-- sass -->
-<!--			<plugin>-->
-<!--				<groupId>nl.geodienstencentrum.maven</groupId>-->
-<!--				<artifactId>sass-maven-plugin</artifactId>-->
-<!--				<version>3.7.2</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<phase>clean</phase>-->
-<!--						<goals>-->
-<!--							<goal>update-stylesheets</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<sassSourceDirectory>${basedir}/src/main/resources/static/sass/</sassSourceDirectory>-->
-<!--							<destination>${basedir}/src/main/resources/static/css/</destination>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
+      		<!-- sass -->
+			<plugin>
+				<groupId>nl.geodienstencentrum.maven</groupId>
+				<artifactId>sass-maven-plugin</artifactId>
+				<version>3.7.2</version>
+				<executions>
+					<execution>
+						<phase>clean</phase>
+						<goals>
+							<goal>update-stylesheets</goal>
+						</goals>
+						<configuration>
+							<sassSourceDirectory>${basedir}/src/main/resources/static/sass/</sassSourceDirectory>
+							<destination>${basedir}/src/main/resources/static/css/</destination>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
       
 	</plugins>
 	</build>

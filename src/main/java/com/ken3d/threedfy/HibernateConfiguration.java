@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan("com.ken3d.threedfy.dal")
 public class HibernateConfiguration {
 
   private final Environment env;
@@ -29,7 +28,7 @@ public class HibernateConfiguration {
   public LocalSessionFactoryBean sessionFactory() {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource());
-    sessionFactory.setPackagesToScan("com.ken3d.threedfy.dal.entities");
+    sessionFactory.setPackagesToScan("com.ken3d.threedfy.Infrastructure.dal.entities");
     sessionFactory.setHibernateProperties(hibernateProperties());
 
     return sessionFactory;

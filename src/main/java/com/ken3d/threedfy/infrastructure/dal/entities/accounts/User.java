@@ -1,19 +1,12 @@
-package com.ken3d.threedfy.dal.entities;
+package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table
-public class User {
-
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "Id")
-  private int id;
+public class User extends AccountEntityBase {
 
   @Column(name = "User_Name")
   private String username;
@@ -30,14 +23,6 @@ public class User {
   @Column(name = "Password_Hash")
   private String passwordHash;
 
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
 
   public String getUsername() {
     return username;

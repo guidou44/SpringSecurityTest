@@ -172,7 +172,7 @@
 			<version>${jquery-verison}</version>
 		</dependency>
 
-		<!-- Bootstrap-->
+		<!-- Bootstrap -->
 		<dependency>
 			<artifactId>bootstrap</artifactId>
 			<groupId>org.webjars</groupId>
@@ -190,13 +190,17 @@
 			<version>${model-mapper-version}</version>
 		</dependency>
 
-		<!-- SASS-->
+		<!-- SASS -->
 		<dependency>
 			<groupId>nl.geodienstencentrum.maven</groupId>
 			<artifactId>sass-maven-plugin</artifactId>
 			<version>3.7.2</version>
 		</dependency>
-
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -304,7 +308,7 @@
 				<version>${maven-jar.version}</version>
 			</plugin>
 
-      <!-- sass -->
+      		<!-- sass -->
 			<plugin>
 				<groupId>nl.geodienstencentrum.maven</groupId>
 				<artifactId>sass-maven-plugin</artifactId>

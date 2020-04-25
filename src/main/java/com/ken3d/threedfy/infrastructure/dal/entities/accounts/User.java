@@ -8,7 +8,7 @@ import javax.persistence.Table;
 @Table
 public class User extends AccountEntityBase {
 
-  @Column(name = "User_Name")
+  @Column(name = "Username", nullable = false)
   private String username;
 
   @Column(name = "First_Name")
@@ -20,8 +20,11 @@ public class User extends AccountEntityBase {
   @Column(name = "Email")
   private String email;
 
-  @Column(name = "Password_Hash")
+  @Column(name = "Password_Hash", nullable = false)
   private String passwordHash;
+
+  @Column(name = "Enabled")
+  private boolean enabled;
 
 
   public String getUsername() {
@@ -58,5 +61,13 @@ public class User extends AccountEntityBase {
 
   public void setPasswordHash(String passwordHash) {
     this.passwordHash = passwordHash;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
   }
 }

@@ -156,10 +156,8 @@
 			<artifactId>junit-jupiter-params</artifactId>
 			<version>${junit-jupiter-params.version}</version>
 			<scope>test</scope>
-		</dependency>+
-
-		<!--JFixture -->
-		<!-- https://mvnrepository.com/artifact/com.flextrade.jfixture/jfixture -->
+		</dependency>
+		<!-- JFixture-->
 		<dependency>
 			<groupId>com.flextrade.jfixture</groupId>
 			<artifactId>jfixture</artifactId>
@@ -198,7 +196,6 @@
 			<artifactId>sass-maven-plugin</artifactId>
 			<version>3.7.2</version>
 		</dependency>
-
 
 	</dependencies>
 

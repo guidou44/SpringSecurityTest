@@ -1,13 +1,12 @@
-package com.ken3d.threedfy.infrastructure.dal.entities;
+package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
-import com.ken3d.threedfy.infrastructure.dal.entities.baseentity.MonitoringEntityBase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table
-public class User extends MonitoringEntityBase {
+public class User extends AccountEntityBase {
 
   @Column(name = "User_Name")
   private String username;

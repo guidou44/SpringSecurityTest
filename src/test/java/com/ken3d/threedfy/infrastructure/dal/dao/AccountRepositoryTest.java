@@ -1,6 +1,7 @@
 package com.ken3d.threedfy.infrastructure.dal.dao;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -10,8 +11,9 @@ import static org.mockito.Mockito.doAnswer;
 import com.flextrade.jfixture.JFixture;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.dao.IEntityRepositoryTest;
-import com.ken3d.threedfy.infrastructure.dal.entities.User;
-import com.ken3d.threedfy.infrastructure.dal.entities.baseentity.MonitoringEntityBase;
+import com.ken3d.threedfy.infrastructure.dal.dao.exceptions.InvalidEntityIdException;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +22,7 @@ import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEntityBase> {
+public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBase> {
 
   private List<User> mockDatabase;
   private List<User> mockData;
@@ -50,25 +52,23 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
     mockDatabase = new ArrayList<>(Arrays.asList(user1, user2, user3, user4));
     mockData = Arrays.asList(user5, user6);
 
-    doAnswer(i -> givenExistingDatabase().remove(givenObjectToDelete())).when(SESSION)
-        .delete(givenObjectToDelete());
+    doAnswer(invocation -> {
+      Object[] args = invocation.getArguments();
+      deleteMockDbEntity(args[0]);
+      return null;
+    }).when(SESSION).delete(any(User.class));
 
-    doAnswer(i -> mockDatabase.add(getFirstObjectToUpdate())).when(SESSION)
-        .saveOrUpdate(getFirstObjectToUpdate());
-    doAnswer(i -> mockDatabase.add(getSecondObjectToUpdate())).when(SESSION)
-        .saveOrUpdate(getSecondObjectToUpdate());
+    doAnswer(invocation -> {
+          Object[] args = invocation.getArguments();
+          createMockDbEntity(args[0]);
+          return null;
+        }
+    ).when(SESSION).saveOrUpdate(any(User.class));
 
     doAnswer(invocation -> {
       Object[] args = invocation.getArguments();
-      updateFirstObject(args[0]);
-      return getFirstObjectToUpdate();
-    }).when(SESSION).merge(getFirstObjectToUpdate());
-
-    doAnswer(invocation -> {
-      Object[] args = invocation.getArguments();
-      updateSecondObject(args[0]);
-      return getSecondObjectToUpdate();
-    }).when(SESSION).merge(getSecondObjectToUpdate());
+      return updateMockDbEntity(args[0]);
+    }).when(SESSION).merge(any(User.class));
 
     willReturn(givenExistingDatabase()).given(QUERY).list();
 
@@ -79,7 +79,7 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
   @Test
   public void givenExistingDatabase_whenSelectById_thenItReturnsProperEntity() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
     User expectedEntity = givenObjectToReturnById(1);
 
     Optional<User> actual = repository.select(User.class, 1);
@@ -90,7 +90,7 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
   @Test
   public void givenExistingDatabase_whenSelectByInvalidId_thenItReturnsOptionalEmpty() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
 
     Optional<User> actual = repository.select(User.class, 33);
 
@@ -102,7 +102,7 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
   public void givenExistingDatabase_whenSelectWithFilter_thenItReturnsProperEntity() {
     final String wantedEmail = "test@test.com";
     user4.setEmail(null); //pre-state to fk things up
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
     User expectedEntity = user2;
 
     Optional<User> actual = repository
@@ -115,7 +115,7 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
   @Test
   public void givenExistingDatabase_whenSelectWithMultipleResultFilter_thenItReturnsOptionalEmpty() {
     final String wantedLastName = "Tested";
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
 
     Optional<User> actual = repository
         .select(User.class, u -> u.getLastName().equals(wantedLastName));
@@ -126,7 +126,7 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
   @Test
   public void givenExistingDatabase_whenSelectAll_thenItReturnsAllEntities() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
 
     List<User> actual = repository.selectAll(User.class);
 
@@ -136,7 +136,7 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
   @Test
   public void givenExistingDatabase_whenSelectAllWithFilter_thenItReturnsProperEntities() {
     final String wantedLastName = "Tested";
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
     List<User> expected = Arrays.asList(user1, user4);
 
     List<User> actual = repository
@@ -147,7 +147,7 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
   @Test
   public void givenExistingDatabase_whenSelectAllWithInvalidFilter_thenItReturnsEmptyList() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
 
     List<User> actual = repository
         .selectAll(User.class, u -> u.getLastName().equals("404 NOT FOUND"));
@@ -157,19 +157,19 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
   @Test
   public void givenExistingDatabase_whenCreateEntity_thenItAddsEntityToDb() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-    List<User> expectedDb = givenExistingDatabase();
-    expectedDb.add(getFirstObjectToUpdate());
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
+    expectedDb.add(user5);
 
-    repository.create(getFirstObjectToUpdate());
+    repository.create(user5);
 
     assertThat(givenExistingDatabase()).containsExactlyElementsIn(expectedDb);
   }
 
   @Test
   public void givenExistingDatabase_whenCreateExistingEntity_thenItOnlyUpdatesEntity() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-    List<User> expectedDb = givenExistingDatabase();
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
 
     repository.create(user1);
 
@@ -178,8 +178,8 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
   @Test
   public void givenExistingDatabase_whenCreateMany_thenItAddsEntitiesToDb() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-    List<User> expectedDb = givenExistingDatabase();
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     List<User> dataToAdd = mockData;
     expectedDb.addAll(mockData);
 
@@ -190,8 +190,8 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
   @Test
   public void givenExistingDatabase_whenCreateManyExisting_thenItOnlyUpdatesEntities() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-    List<User> expectedDb = givenExistingDatabase();
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     List<User> dataToAdd = mockData;
 
     repository.createMany(Arrays.asList(user1, user2));
@@ -200,21 +200,24 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
   }
 
   @Test
-  public void givenExistingDatabase_whenCreateManyMixedExistingAndNot_thenItOnlyCreateProperEntities() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-    List<User> expectedDb = givenExistingDatabase();
-    expectedDb.add(getSecondObjectToUpdate());
+  public void givenExistingDatabase_whenCreateManyMixed_thenItOnlyCreateProperEntitiesAndUpdatesRest() {
+    long initialSize = mockDatabase.size();
+    String user1InitialName = user1.getLastName();
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
+    expectedDb.add(user6);
 
-    repository.createMany(Arrays.asList(user1, getSecondObjectToUpdate()));
+    repository.createMany(Arrays.asList(user1, user6));
 
     assertThat(givenExistingDatabase()).containsExactlyElementsIn(expectedDb);
+    assertThat(mockDatabase.size()).isEqualTo(initialSize + 1);
+    assertThat(user1.getLastName()).isEqualTo(user1InitialName + "_1");
   }
 
   @Test
   public void givenExistingDatabase_whenUpdateEntity_thenItUpdatesEntityProperInDb() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-    List<User> expectedDb = givenExistingDatabase();
-    User entitySelectableById = user1;
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     String updatedLastName = user1.getLastName() + "_UPDATED";
     user1.setLastName(updatedLastName);
 
@@ -223,55 +226,93 @@ public class MonitoringRepositoryTest extends IEntityRepositoryTest<MonitoringEn
 
     assertThat(givenExistingDatabase()).containsExactlyElementsIn(expectedDb);
     assertThat(result.isPresent()).isTrue();
-    assertThat(result.get().getLastName()).isEqualTo(updatedLastName);
+    assertThat(result.get().getLastName()).isEqualTo(updatedLastName + "_1");
   }
 
   @Test
   public void givenExistingDatabase_whenUpdateMany_thenItUpdatesEntitiesProperInDb() {
-    IEntityRepository<MonitoringEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-    List<User> expectedDb = givenExistingDatabase();
-    User firstEntity = user1;
-    String updatedLastName = user1.getLastName() + "_UPDATED";
-    user1.setLastName(updatedLastName);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
+    String updatedLastName1 = user1.getLastName() + "_UPDATED";
+    String updatedLastName2 = user2.getLastName() + "_UPDATED";
+    user1.setLastName(updatedLastName1);
+    user2.setLastName(updatedLastName2);
+    int indexOfUser1 = mockDatabase.indexOf(user1);
+    int indexOfUser2 = mockDatabase.indexOf(user2);
+    List<User> dataToUpdate = Arrays.asList(user1, user2);
 
-    repository.update(user1);
-    Optional<User> result = repository.select(User.class, 1);
+    repository.updateMany(dataToUpdate);
 
     assertThat(givenExistingDatabase()).containsExactlyElementsIn(expectedDb);
-    assertThat(result.isPresent()).isTrue();
-    assertThat(result.get().getLastName()).isEqualTo(updatedLastName);
+    assertThat(user1.getLastName()).isEqualTo(updatedLastName1 + "_1");
+    assertThat(user2.getLastName()).isEqualTo(updatedLastName2 + "_1");
   }
 
-  private User getFirstObjectToUpdate() {
-    return user5;
+  @Test
+  public void givenExistingDatabase_whenDeleteEntity_thenItDeletesEntityProper() {
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+
+    repository.delete(user1);
+
+    assertThat(mockDatabase).doesNotContain(user1);
   }
 
-  private User getSecondObjectToUpdate() {
-    return user6;
+  @Test
+  public void givenExistingDatabase_whenDeleteById_thenItDeletesEntityProper() {
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+
+    repository.delete(User.class, 1);
+
+    assertThat(mockDatabase).doesNotContain(user1);
   }
 
-  private void updateFirstObject(Object object) {
-    user5 = (User) object;
+  @Test
+  public void givenExistingDatabase_whenDeleteByInvalidId_thenItThrowsProperException() {
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+
+
+    assertThrows(InvalidEntityIdException.class, () -> repository.delete(User.class, 69));
   }
 
-  private void updateSecondObject(Object object) {
-    user6 = (User) object;
+  private User updateMockDbEntity(Object object) {
+    User user = (User) object;
+    Optional<User> mayBeUser = mockDatabase.stream().filter(u -> u.getId() == user.getId())
+        .findFirst();
+
+    if (mayBeUser.isPresent()) {
+      user.setLastName(user.getLastName() + "_1");
+      int index = mockDatabase.indexOf(mayBeUser.get());
+      mockDatabase.set(index, user);
+      return mockDatabase.get(index);
+    }
+
+    return null;
+  }
+
+  private void createMockDbEntity(Object object) {
+    User user = (User) object;
+    if (!mockDatabase.contains(user)) {
+      mockDatabase.add(user);
+    } else {
+      updateMockDbEntity(user);
+    }
+  }
+
+  private void deleteMockDbEntity(Object object) {
+    User user = (User) object;
+    mockDatabase.remove(user);
   }
 
   private User givenObjectToReturnById(int id) {
     return mockDatabase.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
   }
 
-  private User givenObjectToDelete() {
-    return user1;
-  }
-
   private List<User> givenExistingDatabase() {
     return mockDatabase;
   }
 
-  protected IEntityRepository<MonitoringEntityBase> givenEntityRepository(
+  protected IEntityRepository<AccountEntityBase> givenEntityRepository(
       SessionFactory sessionFactory) {
-    return new MonitoringRepository(sessionFactory);
+    return new AccountRepository(sessionFactory);
   }
 }

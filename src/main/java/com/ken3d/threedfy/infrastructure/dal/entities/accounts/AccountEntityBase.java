@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.infrastructure.dal.entities.baseentity;
+package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class MonitoringEntityBase implements Serializable {
+public class AccountEntityBase implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

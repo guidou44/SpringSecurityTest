@@ -14,7 +14,7 @@ public class MainController {
   }
 
   @GetMapping("/dashboard")
-  @RolesAllowed({"USER", "ADMIN"})
+  @Secured({"USER"})
   public String getDashboard() {
     return "dashboard";
   }

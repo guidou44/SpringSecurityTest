@@ -11,7 +11,7 @@ public class MainController {
     return "index";
   }
 
-  @GetMapping("/admin/dashboard")
+  @GetMapping("/user/dashboard")
   public String getDashboard() {
     return "dashboard";
   }

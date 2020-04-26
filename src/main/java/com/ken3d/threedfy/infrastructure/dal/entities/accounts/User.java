@@ -1,7 +1,14 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +32,26 @@ public class User extends AccountEntityBase {
 
   @Column(name = "Enabled")
   private boolean enabled;
+
+  @ManyToMany(cascade = {CascadeType.ALL})
+  @JoinTable(
+      name = "User_Role",
+      joinColumns = {@JoinColumn(name = "User_FK", referencedColumnName = "Id")},
+      inverseJoinColumns = {@JoinColumn(name = "Role_FK", referencedColumnName = "Id")}
+  )
+  private Set<Role> roles = new HashSet<>();
+
+  @ManyToMany(cascade = {CascadeType.ALL})
+  @JoinTable(
+      name = "OrganizationGroup_User",
+      joinColumns = {@JoinColumn(name = "User_FK", referencedColumnName = "Id")},
+      inverseJoinColumns = {
+          @JoinColumn(name = "Organization_Group_FK", referencedColumnName = "Id")}
+  )
+  private Set<OrganizationGroup> organizationGroups = new HashSet<>();
+
+  @OneToMany(mappedBy = "owner")
+  private Set<Organization> organizations = new HashSet<>();
 
 
   public String getUsername() {
@@ -69,5 +96,31 @@ public class User extends AccountEntityBase {
 
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
+
+  public Set<OrganizationGroup> getOrganizationGroups() {
+    return organizationGroups;
+  }
+
+  public void setOrganizationGroups(
+      Set<OrganizationGroup> organizationGroups) {
+    this.organizationGroups = organizationGroups;
+  }
+
+  public Set<Organization> getOrganizations() {
+    return organizations;
+  }
+
+  public void setOrganizations(
+      Set<Organization> organizations) {
+    this.organizations = organizations;
   }
 }

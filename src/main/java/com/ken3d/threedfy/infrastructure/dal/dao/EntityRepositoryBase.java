@@ -6,21 +6,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Table;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class EntityRepositoryBase<B extends Serializable> {
 
   private static final String SELECT_QUERY = "from ";
-  private final SessionFactory sessionFactory;
 
-  public EntityRepositoryBase(SessionFactory sessionFactory) {
-    this.sessionFactory = sessionFactory;
+  @PersistenceContext
+  private Session session;
+
+  public void setSession(Session session) {
+    this.session = session;
   }
 
   public <T extends B> Optional<T> select(Class<T> type, final int id) {
-    return Optional.ofNullable(getCurrentSession().get(type, id));
+    return Optional.ofNullable(session.get(type, id));
   }
 
   public <T extends B> Optional<T> select(Class<T> type, Predicate<T> where) {
@@ -29,16 +31,16 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
   }
 
   public <T extends B> List<T> selectAll(Class<T> type) {
-    return getCurrentSession().createQuery(SELECT_QUERY + type.getName(), type).list(); //will not work for different table names
+    String tableName = type.getAnnotation(Table.class).name();
+    return session.createQuery(SELECT_QUERY + tableName, type).list();
   }
 
   public <T extends B> List<T> selectAll(Class<T> type, Predicate<T> where) {
-    List<T> test = selectAll(type);
     return selectAll(type).stream().filter(e -> tryWhere(e, where)).collect(Collectors.toList());
   }
 
   public <T extends B> T create(final T entity) {
-    getCurrentSession().saveOrUpdate(entity);
+    session.saveOrUpdate(entity);
     return entity;
   }
 
@@ -51,7 +53,7 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
 
   @SuppressWarnings("unchecked")
   public <T extends B> T update(final T entity) {
-    return (T) getCurrentSession().merge(entity);
+    return (T) session.merge(entity);
   }
 
   public <T extends B> List<T> updateMany(final List<T> entities) {
@@ -62,7 +64,7 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
   }
 
   public <T extends B> void delete(final T entity) {
-    getCurrentSession().delete(entity);
+    session.delete(entity);
   }
 
   public <T extends B> void delete(Class<T> type, final int entityId) {
@@ -72,10 +74,6 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
     } else {
       throw new InvalidEntityIdException();
     }
-  }
-
-  protected Session getCurrentSession() {
-    return sessionFactory.getCurrentSession();
   }
 
   private <T extends B> Optional<T> singleOrEmpty(List<T> list) {

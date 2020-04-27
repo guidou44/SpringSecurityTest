@@ -9,16 +9,16 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.doAnswer;
 
 import com.flextrade.jfixture.JFixture;
+import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.dao.IEntityRepositoryTest;
 import com.ken3d.threedfy.infrastructure.dal.dao.exceptions.InvalidEntityIdException;
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.hibernate.SessionFactory;
+import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -79,7 +79,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenSelectById_thenItReturnsProperEntity() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     User expectedEntity = givenObjectToReturnById(1);
 
     Optional<User> actual = repository.select(User.class, 1);
@@ -90,7 +90,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenSelectByInvalidId_thenItReturnsOptionalEmpty() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
 
     Optional<User> actual = repository.select(User.class, 33);
 
@@ -102,7 +102,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
   public void givenExistingDatabase_whenSelectWithFilter_thenItReturnsProperEntity() {
     final String wantedEmail = "test@test.com";
     user4.setEmail(null); //pre-state to fk things up
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     User expectedEntity = user2;
 
     Optional<User> actual = repository
@@ -115,7 +115,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
   @Test
   public void givenExistingDatabase_whenSelectWithMultipleResultFilter_thenItReturnsOptionalEmpty() {
     final String wantedLastName = "Tested";
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
 
     Optional<User> actual = repository
         .select(User.class, u -> u.getLastName().equals(wantedLastName));
@@ -126,7 +126,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenSelectAll_thenItReturnsAllEntities() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
 
     List<User> actual = repository.selectAll(User.class);
 
@@ -136,7 +136,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
   @Test
   public void givenExistingDatabase_whenSelectAllWithFilter_thenItReturnsProperEntities() {
     final String wantedLastName = "Tested";
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expected = Arrays.asList(user1, user4);
 
     List<User> actual = repository
@@ -147,7 +147,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenSelectAllWithInvalidFilter_thenItReturnsEmptyList() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
 
     List<User> actual = repository
         .selectAll(User.class, u -> u.getLastName().equals("404 NOT FOUND"));
@@ -157,7 +157,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenCreateEntity_thenItAddsEntityToDb() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     expectedDb.add(user5);
 
@@ -168,7 +168,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenCreateExistingEntity_thenItOnlyUpdatesEntity() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
 
     repository.create(user1);
@@ -178,7 +178,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenCreateMany_thenItAddsEntitiesToDb() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     List<User> dataToAdd = mockData;
     expectedDb.addAll(mockData);
@@ -190,7 +190,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenCreateManyExisting_thenItOnlyUpdatesEntities() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     List<User> dataToAdd = mockData;
 
@@ -203,7 +203,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
   public void givenExistingDatabase_whenCreateManyMixed_thenItOnlyCreateProperEntitiesAndUpdatesRest() {
     long initialSize = mockDatabase.size();
     String user1InitialName = user1.getLastName();
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     expectedDb.add(user6);
 
@@ -216,7 +216,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenUpdateEntity_thenItUpdatesEntityProperInDb() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     String updatedLastName = user1.getLastName() + "_UPDATED";
     user1.setLastName(updatedLastName);
@@ -231,7 +231,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenUpdateMany_thenItUpdatesEntitiesProperInDb() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
     List<User> expectedDb = new ArrayList<>(givenExistingDatabase());
     String updatedLastName1 = user1.getLastName() + "_UPDATED";
     String updatedLastName2 = user2.getLastName() + "_UPDATED";
@@ -250,7 +250,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenDeleteEntity_thenItDeletesEntityProper() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
 
     repository.delete(user1);
 
@@ -259,7 +259,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenDeleteById_thenItDeletesEntityProper() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
 
     repository.delete(User.class, 1);
 
@@ -268,8 +268,7 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
 
   @Test
   public void givenExistingDatabase_whenDeleteByInvalidId_thenItThrowsProperException() {
-    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION_FACTORY);
-
+    IEntityRepository<AccountEntityBase> repository = givenEntityRepository(SESSION);
 
     assertThrows(InvalidEntityIdException.class, () -> repository.delete(User.class, 69));
   }
@@ -311,8 +310,9 @@ public class AccountRepositoryTest extends IEntityRepositoryTest<AccountEntityBa
     return mockDatabase;
   }
 
-  protected IEntityRepository<AccountEntityBase> givenEntityRepository(
-      SessionFactory sessionFactory) {
-    return new AccountRepository(sessionFactory);
+  protected IEntityRepository<AccountEntityBase> givenEntityRepository(Session session) {
+    AccountRepository repository = new AccountRepository();
+    repository.setSession(session);
+    return repository;
   }
 }

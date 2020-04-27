@@ -1,6 +1,6 @@
 package com.ken3d.threedfy;
 
-import javax.sql.DataSource;
+import com.ken3d.threedfy.domain.User.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,28 +17,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Profile("!nosecurity")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  private final DataSource dataSource;
+  private UserAuthenticationService userAuthService;
 
   @Autowired
-  public SecurityConfiguration(DataSource dataSource) {
-    this.dataSource = dataSource;
+  public SecurityConfiguration(UserAuthenticationService userAuthService) {
+    this.userAuthService = userAuthService;
   }
 
   @Autowired
-  public void configureGlobal(AuthenticationManagerBuilder authManager) throws Exception {
-    authManager.jdbcAuthentication().dataSource(dataSource)
-        .passwordEncoder(new BCryptPasswordEncoder())
-        .usersByUsernameQuery(
-            "SELECT Username,Password_Hash, Enabled FROM User WHERE username=?")
-        .authoritiesByUsernameQuery(
-            "SELECT u.Username, ur.Role FROM User_Role as "
-                + "ur JOIN User as u on u.Id = ur.User_FK WHERE u.Username=?");
+  public void configureGlobal(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
+    authManagerBuilder.userDetailsService(userAuthService)
+        .passwordEncoder(new BCryptPasswordEncoder());
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable()
-        .formLogin().loginPage("/login")
-        .defaultSuccessUrl("/dashboard");
+    http.formLogin().loginPage("/login")
+        .and()
+        .authorizeRequests()
+        .antMatchers("/admin*").hasRole("ADMIN")
+        .antMatchers("/user*").hasRole("USER")
+        .antMatchers("/*").permitAll()
+        .and()
+        .logout().permitAll().logoutSuccessUrl("/login")
+        .and()
+        .csrf().disable();
   }
 }

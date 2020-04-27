@@ -1,15 +1,24 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
+import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table
 public class Module extends AccountEntityBase {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "Id")
+  private int id;
 
   @Column(name = "Name", nullable = false)
   private String name;
@@ -43,5 +52,13 @@ public class Module extends AccountEntityBase {
   public void setOrganizationGroups(
       Set<OrganizationGroup> organizationGroups) {
     this.organizationGroups = organizationGroups;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 }

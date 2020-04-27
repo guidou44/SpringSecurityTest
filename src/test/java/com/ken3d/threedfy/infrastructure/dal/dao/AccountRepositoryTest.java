@@ -12,7 +12,7 @@ import com.flextrade.jfixture.JFixture;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.dao.IEntityRepositoryTest;
 import com.ken3d.threedfy.infrastructure.dal.dao.exceptions.InvalidEntityIdException;
-import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
+import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import java.util.ArrayList;
 import java.util.Arrays;

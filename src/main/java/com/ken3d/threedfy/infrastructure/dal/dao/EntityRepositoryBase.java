@@ -15,7 +15,6 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
   private static final String SELECT_QUERY = "from ";
   private final SessionFactory sessionFactory;
 
-  @Autowired
   public EntityRepositoryBase(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
@@ -30,10 +29,11 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
   }
 
   public <T extends B> List<T> selectAll(Class<T> type) {
-    return getCurrentSession().createQuery(SELECT_QUERY + type.getName(), type).list();
+    return getCurrentSession().createQuery(SELECT_QUERY + type.getName(), type).list(); //will not work for different table names
   }
 
   public <T extends B> List<T> selectAll(Class<T> type, Predicate<T> where) {
+    List<T> test = selectAll(type);
     return selectAll(type).stream().filter(e -> tryWhere(e, where)).collect(Collectors.toList());
   }
 

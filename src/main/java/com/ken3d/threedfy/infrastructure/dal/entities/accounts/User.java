@@ -1,10 +1,14 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
+import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -12,8 +16,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "User")
 public class User extends AccountEntityBase {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "Id")
+  private int id;
 
   @Column(name = "Username", nullable = false)
   private String username;
@@ -53,6 +62,13 @@ public class User extends AccountEntityBase {
   @OneToMany(mappedBy = "owner")
   private Set<Organization> organizations = new HashSet<>();
 
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
 
   public String getUsername() {
     return username;
@@ -122,5 +138,9 @@ public class User extends AccountEntityBase {
   public void setOrganizations(
       Set<Organization> organizations) {
     this.organizations = organizations;
+  }
+
+  public String getPasswordHash() {
+    return passwordHash;
   }
 }

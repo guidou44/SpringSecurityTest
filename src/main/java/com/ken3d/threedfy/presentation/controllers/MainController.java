@@ -13,8 +13,8 @@ public class MainController {
     return "index";
   }
 
-  @GetMapping("/dashboard")
-  @Secured({"USER"})
+  @GetMapping("/user/dashboard")
+//  @Secured({"USER"})
   public String getDashboard() {
     return "dashboard";
   }

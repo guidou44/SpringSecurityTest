@@ -14,7 +14,7 @@ public class MainController {
   }
 
   @GetMapping("/user/dashboard")
-//  @Secured({"USER"})
+  @Secured({"USER"})
   public String getDashboard() {
     return "dashboard";
   }

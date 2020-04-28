@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.domain.User;
+package com.ken3d.threedfy.domain.user;
 
 import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;

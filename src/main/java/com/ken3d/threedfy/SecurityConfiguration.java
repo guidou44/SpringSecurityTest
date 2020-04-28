@@ -1,6 +1,6 @@
 package com.ken3d.threedfy;
 
-import com.ken3d.threedfy.domain.User.UserAuthenticationService;
+import com.ken3d.threedfy.domain.user.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

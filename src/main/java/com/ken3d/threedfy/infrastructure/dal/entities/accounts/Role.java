@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table
@@ -39,6 +40,10 @@ public class Role extends AccountEntityBase {
       inverseJoinColumns = { @JoinColumn(name = "Module_FK", referencedColumnName = "Id") }
   )
   private Set<Module> modules = new HashSet<>();
+
+  @Column(name = "Authority_Level", nullable = false)
+  @ColumnDefault("-1")
+  private int authorityLevel;
 
   public String getName() {
     return name;
@@ -79,5 +84,13 @@ public class Role extends AccountEntityBase {
 
   public void setId(int id) {
     this.id = id;
+  }
+
+  public int getAuthorityLevel() {
+    return authorityLevel;
+  }
+
+  public void setAuthorityLevel(int authorityLevel) {
+    this.authorityLevel = authorityLevel;
   }
 }

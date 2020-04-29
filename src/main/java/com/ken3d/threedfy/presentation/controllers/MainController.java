@@ -1,7 +1,6 @@
 package com.ken3d.threedfy.presentation.controllers;
 
-import javax.annotation.security.RolesAllowed;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,8 +12,8 @@ public class MainController {
     return "index";
   }
 
-  @GetMapping("/user/dashboard")
-  @Secured({"USER"})
+  @PreAuthorize("HasAtLeastAuthorityOf(0)")
+  @GetMapping("/dashboard")
   public String getDashboard() {
     return "dashboard";
   }

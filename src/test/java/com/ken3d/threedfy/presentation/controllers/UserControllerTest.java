@@ -15,21 +15,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(
-    controllers = PingController.class,
-    excludeAutoConfiguration = HibernateConfiguration.class)
+@WebMvcTest(controllers = UserController.class, excludeAutoConfiguration = HibernateConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("nosecurity")
-public class PingControllerTest {
+public class UserControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   @Test
-  public void givenPingController_whenGetPing_thenItReturnsProperView() throws Exception {
+  public void givenUserController_whenGetLogin_thenItReturnsProperView() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/ping"))
+        .perform(MockMvcRequestBuilders.get("/login"))
         .andExpect(status().isOk())
-        .andExpect(view().name("index"));
+        .andExpect(view().name("login"));
+  }
+
+  @Test
+  public void givenUserController_whenGetRegister_thenItReturnsProperView() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/register"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("register"));
   }
 }

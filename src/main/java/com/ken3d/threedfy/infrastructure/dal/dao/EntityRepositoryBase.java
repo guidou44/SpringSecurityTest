@@ -1,75 +1,92 @@
 package com.ken3d.threedfy.infrastructure.dal.dao;
 
-import org.hibernate.SessionFactory;
+import com.ken3d.threedfy.infrastructure.dal.dao.exceptions.InvalidEntityIdException;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Table;
+import org.hibernate.Session;
 
-public abstract class EntityRepositoryBase {
+public abstract class EntityRepositoryBase<B extends Serializable> {
 
-  private final SessionFactory sessionFactory;
+  private static final String SELECT_QUERY = "from ";
 
-  public EntityRepositoryBase(SessionFactory sessionFactory) {
-    this.sessionFactory = sessionFactory;
+  @PersistenceContext
+  private Session session;
+
+  public void setSession(Session session) {
+    this.session = session;
   }
 
-  //  public <T extends Serializable> T select(final long id) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> T select(T e, Function<Boolean, T> where) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> List<T> selectAll() {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> List<T> selectAll(T e, Function<Boolean, T> where) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> void create(final T entity) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> void createMany(final List<T> entities) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> T update(final T entity) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> T updateMany(final List<T> entities) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> void delete(final T entity) {
-  //
-  //  }
-  //
-  //  public <T extends Serializable> void delete(final long entityId) {
-  //
-  //  }
-
-  private void executeTransaction() {
-
-    //    Session session = factory.openSession();
-    //    Transaction tx = null;
-    //    try {
-    //      tx = session.beginTransaction();
-    //      List employees = session.createQuery("FROM Employee").list();
-    //      for (Iterator iterator = employees.iterator(); iterator.hasNext();){
-    //        Employee employee = (Employee) iterator.next();
-    //        System.out.print("First Name: " + employee.getFirstName());
-    //        System.out.print("  Last Name: " + employee.getLastName());
-    //        System.out.println("  Salary: " + employee.getSalary());
-    //      }
-    //      tx.commit();
-    //    } catch (HibernateException e) {
-    //      if (tx!=null) tx.rollback();
-    //      e.printStackTrace();
-    //    } finally {
-    //      session.close();
-    //    }
-
+  public <T extends B> Optional<T> select(Class<T> type, final int id) {
+    return Optional.ofNullable(session.get(type, id));
   }
+
+  public <T extends B> Optional<T> select(Class<T> type, Predicate<T> where) {
+    List<T> allEntities = selectAll(type, where);
+    return singleOrEmpty(allEntities);
+  }
+
+  public <T extends B> List<T> selectAll(Class<T> type) {
+    String tableName = type.getAnnotation(Table.class).name();
+    return session.createQuery(SELECT_QUERY + tableName, type).list();
+  }
+
+  public <T extends B> List<T> selectAll(Class<T> type, Predicate<T> where) {
+    return selectAll(type).stream().filter(e -> tryWhere(e, where)).collect(Collectors.toList());
+  }
+
+  public <T extends B> T create(final T entity) {
+    session.saveOrUpdate(entity);
+    return entity;
+  }
+
+  public <T extends B> List<T> createMany(final List<T> entities) {
+    for (T entity : entities) {
+      entity = create(entity);
+    }
+    return entities;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends B> T update(final T entity) {
+    return (T) session.merge(entity);
+  }
+
+  public <T extends B> List<T> updateMany(final List<T> entities) {
+    for (T entity : entities) {
+      entity = update(entity);
+    }
+    return entities;
+  }
+
+  public <T extends B> void delete(final T entity) {
+    session.delete(entity);
+  }
+
+  public <T extends B> void delete(Class<T> type, final int entityId) {
+    Optional<T> entity = select(type, entityId);
+    if (entity.isPresent()) {
+      delete(entity.get());
+    } else {
+      throw new InvalidEntityIdException();
+    }
+  }
+
+  private <T extends B> Optional<T> singleOrEmpty(List<T> list) {
+    return list.stream().distinct().map(Optional::ofNullable).reduce(Optional.empty(),
+        (a, b) -> a.isPresent() ^ b.isPresent() ? b : Optional.empty());
+  }
+
+  private <T extends B> Boolean tryWhere(T entity, Predicate<T> where) {
+    try {
+      return where.test(entity);
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
 }

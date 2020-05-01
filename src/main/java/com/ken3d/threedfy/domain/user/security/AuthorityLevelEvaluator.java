@@ -5,6 +5,7 @@ import com.ken3d.threedfy.domain.user.UserAuthDetails;
 import com.ken3d.threedfy.domain.user.exceptions.AuthorityWithoutLevelException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
@@ -20,15 +21,29 @@ public class AuthorityLevelEvaluator extends SecurityExpressionRoot implements
   }
 
   public boolean HasAtLeastAuthorityOf(int authLevel) {
-    UserAuthDetails authDetails = (UserAuthDetails) this.getPrincipal();
-    return hasAuthorityGreaterOrEqualThan(authDetails, authLevel);
+    Optional<UserAuthDetails> authDetailsOpt = tryCast(this.getPrincipal(), UserAuthDetails.class);
+
+    return authDetailsOpt
+        .filter(userAuthDetails -> hasAuthorityGreaterOrEqualThan(userAuthDetails, authLevel))
+        .isPresent();
   }
 
-  public boolean HasAtLeastAuthorityOf(String role) {
-    UserAuthDetails authDetails = (UserAuthDetails) this.getPrincipal();
+  public boolean HasMinimumRole(String role) {
+    Optional<UserAuthDetails> authDetailsOpt = tryCast(this.getPrincipal(), UserAuthDetails.class);
 
-    return hasAuthority(authDetails, role);
+    return authDetailsOpt
+        .filter(userAuthDetails -> hasAuthority(userAuthDetails, role))
+        .isPresent();
   }
+
+  private <T> Optional<T> tryCast(Object target, Class<T> toClass) {
+    try {
+      return Optional.ofNullable(toClass.cast(target));
+    } catch (Exception e) {
+      return Optional.empty();
+    }
+  }
+
 
   private boolean hasAuthorityGreaterOrEqualThan(UserAuthDetails authentication,
       int requiredLevel) {

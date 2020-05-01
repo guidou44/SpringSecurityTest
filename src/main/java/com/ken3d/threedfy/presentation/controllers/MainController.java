@@ -12,8 +12,8 @@ public class MainController {
     return "index";
   }
 
-  @PreAuthorize("HasAtLeastAuthorityOf(0)")
   @GetMapping("/dashboard")
+  @PreAuthorize("HasAtLeastAuthorityOf(0)")
   public String getDashboard() {
     return "dashboard";
   }

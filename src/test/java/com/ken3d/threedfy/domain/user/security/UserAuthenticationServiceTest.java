@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.domain.user;
+package com.ken3d.threedfy.domain.user.security;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 
 import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
+import com.ken3d.threedfy.domain.user.Authority;
+import com.ken3d.threedfy.domain.user.UserAuthDetails;
 import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
@@ -44,24 +46,25 @@ public class UserAuthenticationServiceTest {
     willReturn(ROLES).given(USER).getRoles();
     willReturn(ROLE_MANAGER_NAME).given(ROLE_MANAGER).getName();
     willReturn(ROLE_USER_NAME).given(ROLE_USER).getName();
+    willReturn(3).given(ROLE_MANAGER).getAuthorityLevel();
+    willReturn(0).given(ROLE_USER).getAuthorityLevel();
   }
 
   @Test
   public void givenValidUsername_whenAuthUser_thenItSucceedsWithProperUserDetails() {
     when(accountRepository.select(any(Class.class), any(Predicate.class)))
         .thenReturn(Optional.ofNullable(USER));
+    Authority managerAuthority = givenExpectedAuthority(ROLE_MANAGER);
+    Authority userAuthority = givenExpectedAuthority(ROLE_USER);
     UserAuthenticationService authService = new UserAuthenticationService(accountRepository);
 
     UserDetails userDetails = authService.loadUserByUsername(USERNAME);
 
     assertThat(userDetails.getUsername()).isEqualTo(USERNAME);
     assertThat(userDetails.getPassword()).isEqualTo(PASSWORD);
-    assertThat(
-        userDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toSet()))
-        .contains("ROLE_" + ROLE_MANAGER_NAME);
-    assertThat(
-        userDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toSet()))
-        .contains("ROLE_" + ROLE_USER_NAME);
+    assertThat(userDetails).isInstanceOf(UserAuthDetails.class);
+    assertThat(userDetails.getAuthorities()).contains(managerAuthority);
+    assertThat(userDetails.getAuthorities()).contains(userAuthority);
     assertThat(userDetails.getAuthorities().size()).isEqualTo(ROLES.size());
   }
 
@@ -73,6 +76,10 @@ public class UserAuthenticationServiceTest {
 
     assertThrows(UsernameNotFoundException.class,
         () -> authService.loadUserByUsername(NOT_USERNAME));
+  }
+
+  private Authority givenExpectedAuthority(Role role) {
+    return new Authority(role);
   }
 
 }

@@ -2,6 +2,7 @@ package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
 import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -142,5 +143,26 @@ public class User extends AccountEntityBase {
 
   public String getPasswordHash() {
     return passwordHash;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User user = (User) o;
+    return id == user.id &&
+        enabled == user.enabled &&
+        Objects.equals(username, user.username) &&
+        Objects.equals(firstName, user.firstName) &&
+        Objects.equals(lastName, user.lastName) &&
+        Objects.equals(email, user.email) &&
+        Objects.equals(passwordHash, user.passwordHash) &&
+        Objects.equals(roles, user.roles) &&
+        Objects.equals(organizationGroups, user.organizationGroups) &&
+        Objects.equals(organizations, user.organizations);
   }
 }

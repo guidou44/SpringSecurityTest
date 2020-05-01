@@ -2,6 +2,7 @@ package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
 import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -92,5 +93,22 @@ public class Role extends AccountEntityBase {
 
   public void setAuthorityLevel(int authorityLevel) {
     this.authorityLevel = authorityLevel;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Role role = (Role) o;
+    return id == role.id &&
+        authorityLevel == role.authorityLevel &&
+        Objects.equals(name, role.name) &&
+        Objects.equals(description, role.description) &&
+        Objects.equals(users, role.users) &&
+        Objects.equals(modules, role.modules);
   }
 }

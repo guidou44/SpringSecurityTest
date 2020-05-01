@@ -2,6 +2,7 @@ package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
 import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -82,5 +83,21 @@ public class OrganizationGroup extends AccountEntityBase {
 
   public void setId(int id) {
     this.id = id;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OrganizationGroup that = (OrganizationGroup) o;
+    return id == that.id &&
+        Objects.equals(name, that.name) &&
+        Objects.equals(organization, that.organization) &&
+        Objects.equals(users, that.users) &&
+        Objects.equals(modules, that.modules);
   }
 }

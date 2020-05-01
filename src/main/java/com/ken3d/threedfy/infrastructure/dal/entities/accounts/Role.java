@@ -104,11 +104,11 @@ public class Role extends AccountEntityBase {
       return false;
     }
     Role role = (Role) o;
-    return id == role.id &&
-        authorityLevel == role.authorityLevel &&
-        Objects.equals(name, role.name) &&
-        Objects.equals(description, role.description) &&
-        Objects.equals(users, role.users) &&
-        Objects.equals(modules, role.modules);
+    return id == role.id
+        && authorityLevel == role.authorityLevel
+        && Objects.equals(name, role.name)
+        && Objects.equals(description, role.description)
+        && Objects.equals(users, role.users)
+        && Objects.equals(modules, role.modules);
   }
 }

@@ -154,15 +154,15 @@ public class User extends AccountEntityBase {
       return false;
     }
     User user = (User) o;
-    return id == user.id &&
-        enabled == user.enabled &&
-        Objects.equals(username, user.username) &&
-        Objects.equals(firstName, user.firstName) &&
-        Objects.equals(lastName, user.lastName) &&
-        Objects.equals(email, user.email) &&
-        Objects.equals(passwordHash, user.passwordHash) &&
-        Objects.equals(roles, user.roles) &&
-        Objects.equals(organizationGroups, user.organizationGroups) &&
-        Objects.equals(organizations, user.organizations);
+    return id == user.id
+        && enabled == user.enabled
+        && Objects.equals(username, user.username)
+        && Objects.equals(firstName, user.firstName)
+        && Objects.equals(lastName, user.lastName)
+        && Objects.equals(email, user.email)
+        && Objects.equals(passwordHash, user.passwordHash)
+        && Objects.equals(roles, user.roles)
+        && Objects.equals(organizationGroups, user.organizationGroups)
+        && Objects.equals(organizations, user.organizations);
   }
 }

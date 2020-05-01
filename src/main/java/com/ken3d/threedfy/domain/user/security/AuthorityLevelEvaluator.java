@@ -20,7 +20,7 @@ public class AuthorityLevelEvaluator extends SecurityExpressionRoot implements
     super(authentication);
   }
 
-  public boolean HasAtLeastAuthorityOf(int authLevel) {
+  public boolean hasAtLeastAuthorityOf(int authLevel) {
     Optional<UserAuthDetails> authDetailsOpt = tryCast(this.getPrincipal(), UserAuthDetails.class);
 
     return authDetailsOpt
@@ -28,7 +28,7 @@ public class AuthorityLevelEvaluator extends SecurityExpressionRoot implements
         .isPresent();
   }
 
-  public boolean HasMinimumRole(String role) {
+  public boolean hasMinimumRole(String role) {
     Optional<UserAuthDetails> authDetailsOpt = tryCast(this.getPrincipal(), UserAuthDetails.class);
 
     return authDetailsOpt

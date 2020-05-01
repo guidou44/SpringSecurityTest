@@ -11,16 +11,4 @@ public class PingController {
   public String getHelloWorld() {
     return "index";
   }
-
-  @PreAuthorize("HasMinimumRole('MANAGER')")
-  @GetMapping("/ping/managerAuth")
-  public String getManagerProtectedView () {
-    return "index";
-  }
-
-  @PreAuthorize("HasAtLeastAuthorityOf(1)")
-  @GetMapping("/ping/levelAuth")
-  public String getLevelProtectedView () {
-    return "index";
-  }
 }

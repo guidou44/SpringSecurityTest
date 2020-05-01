@@ -94,10 +94,10 @@ public class OrganizationGroup extends AccountEntityBase {
       return false;
     }
     OrganizationGroup that = (OrganizationGroup) o;
-    return id == that.id &&
-        Objects.equals(name, that.name) &&
-        Objects.equals(organization, that.organization) &&
-        Objects.equals(users, that.users) &&
-        Objects.equals(modules, that.modules);
+    return id == that.id
+        && Objects.equals(name, that.name)
+        && Objects.equals(organization, that.organization)
+        && Objects.equals(users, that.users)
+        && Objects.equals(modules, that.modules);
   }
 }

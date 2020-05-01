@@ -85,10 +85,10 @@ public class Organization extends AccountEntityBase {
       return false;
     }
     Organization that = (Organization) o;
-    return id == that.id &&
-        isCollaborative == that.isCollaborative &&
-        Objects.equals(name, that.name) &&
-        Objects.equals(owner, that.owner) &&
-        Objects.equals(organizationGroups, that.organizationGroups);
+    return id == that.id
+        && isCollaborative == that.isCollaborative
+        && Objects.equals(name, that.name)
+        && Objects.equals(owner, that.owner)
+        && Objects.equals(organizationGroups, that.organizationGroups);
   }
 }

@@ -34,7 +34,7 @@ public class MainControllerTest {
   @Test
   public void givenMainController_whenGetDashboard_thenItReturnsProperView() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/user/dashboard"))
+        .perform(MockMvcRequestBuilders.get("/dashboard"))
         .andExpect(status().isOk())
         .andExpect(view().name("dashboard"));
   }

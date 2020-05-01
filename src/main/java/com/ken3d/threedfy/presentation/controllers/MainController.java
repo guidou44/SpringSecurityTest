@@ -13,7 +13,7 @@ public class MainController {
   }
 
   @GetMapping("/dashboard")
-  @PreAuthorize("HasAtLeastAuthorityOf(0)")
+  @PreAuthorize("hasAtLeastAuthorityOf(0)")
   public String getDashboard() {
     return "dashboard";
   }

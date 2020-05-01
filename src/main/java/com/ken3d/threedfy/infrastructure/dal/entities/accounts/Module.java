@@ -72,9 +72,9 @@ public class Module extends AccountEntityBase {
       return false;
     }
     Module module = (Module) o;
-    return id == module.id &&
-        Objects.equals(name, module.name) &&
-        Objects.equals(roles, module.roles) &&
-        Objects.equals(organizationGroups, module.organizationGroups);
+    return id == module.id
+        && Objects.equals(name, module.name)
+        && Objects.equals(roles, module.roles)
+        && Objects.equals(organizationGroups, module.organizationGroups);
   }
 }

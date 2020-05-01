@@ -7,22 +7,18 @@ import static org.mockito.Mockito.mock;
 
 import java.io.Serializable;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class IEntityRepositoryTest<EntityType extends Serializable> {
 
   protected static final Query QUERY = mock(Query.class);
-  protected static final SessionFactory SESSION_FACTORY = mock(SessionFactory.class);
   protected static final Session SESSION = mock(Session.class);
 
   @BeforeEach
   void setUp() {
-    willReturn(SESSION).given(SESSION_FACTORY).getCurrentSession();
     willReturn(QUERY).given(SESSION).createQuery(anyString(), any(Class.class));
   }
 
-  protected abstract IEntityRepository<EntityType> givenEntityRepository(
-      SessionFactory sessionFactory);
+  protected abstract IEntityRepository<EntityType> givenEntityRepository(Session session);
 }

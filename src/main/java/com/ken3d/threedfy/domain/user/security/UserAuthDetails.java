@@ -1,5 +1,6 @@
-package com.ken3d.threedfy.domain.user;
+package com.ken3d.threedfy.domain.user.security;
 
+import com.ken3d.threedfy.domain.user.security.Authority;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

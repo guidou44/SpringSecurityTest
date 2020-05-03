@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.domain.user;
+package com.ken3d.threedfy.domain.user.security;
 
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import java.util.Objects;

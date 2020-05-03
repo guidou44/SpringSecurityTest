@@ -15,10 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = UserController.class, excludeAutoConfiguration = HibernateConfiguration.class)
+@WebMvcTest(controllers = LoginController.class, excludeAutoConfiguration = HibernateConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("nosecurity")
-public class UserControllerTest {
+public class LoginControllerTest {
 
   @Autowired
   private MockMvc mockMvc;

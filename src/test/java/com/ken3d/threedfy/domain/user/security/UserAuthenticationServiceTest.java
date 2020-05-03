@@ -9,9 +9,6 @@ import static org.mockito.Mockito.when;
 
 import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
-import com.ken3d.threedfy.domain.user.Authority;
-import com.ken3d.threedfy.domain.user.UserAuthDetails;
-import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import java.util.Arrays;
@@ -19,7 +16,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;

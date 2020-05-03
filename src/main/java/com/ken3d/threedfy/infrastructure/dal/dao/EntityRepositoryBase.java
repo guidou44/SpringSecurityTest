@@ -27,9 +27,6 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
 
   public <T extends B> Optional<T> select(Class<T> type, Predicate<T> where) {
     List<T> allEntities = selectAll(type, where);
-    System.out.println("----------------DEBUG----------------------------");
-    System.out.println("Request made");
-    System.out.println("----------------DEBUG----------------------------");
     return singleOrEmpty(allEntities);
   }
 

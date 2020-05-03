@@ -22,8 +22,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: 3dify
-        environment_name: 3dify-env
+        application_name: app-3dify
+        environment_name: env-3dify
         version_label: ${{env.VERSION}}
         region: us-east-2
         deployment_package: target/3dify-0.0.1-SNAPSHOT.jar

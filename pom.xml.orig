@@ -197,14 +197,20 @@
 			<version>3.7.2</version>
 		</dependency>
 
-<<<<<<< HEAD
-=======
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
->>>>>>> master
+<<<<<<< HEAD
+=======
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+>>>>>>> developp
 	</dependencies>
 
 	<dependencyManagement>
@@ -330,7 +336,11 @@
 					</execution>
 				</executions>
 			</plugin>
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> developp
 	</plugins>
 	</build>
 </project>

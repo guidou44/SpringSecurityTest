@@ -63,6 +63,8 @@ public class User extends AccountEntityBase {
   @OneToMany(mappedBy = "owner")
   private Set<Organization> organizations = new HashSet<>();
 
+  //region Getters and Setters
+
   public int getId() {
     return id;
   }
@@ -144,6 +146,8 @@ public class User extends AccountEntityBase {
   public String getPasswordHash() {
     return passwordHash;
   }
+
+  //endregion
 
   @Override
   public boolean equals(Object o) {

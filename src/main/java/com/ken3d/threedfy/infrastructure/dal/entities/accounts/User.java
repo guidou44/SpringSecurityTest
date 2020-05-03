@@ -15,6 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
 
 @Entity
 @Table(name = "User")
@@ -62,6 +64,8 @@ public class User extends AccountEntityBase {
 
   @OneToMany(mappedBy = "owner")
   private Set<Organization> organizations = new HashSet<>();
+
+  //region Getters and Setters
 
   public int getId() {
     return id;
@@ -144,6 +148,8 @@ public class User extends AccountEntityBase {
   public String getPasswordHash() {
     return passwordHash;
   }
+
+  //endregion
 
   @Override
   public boolean equals(Object o) {

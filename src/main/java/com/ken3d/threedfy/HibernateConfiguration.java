@@ -28,9 +28,8 @@ public class HibernateConfiguration {
   public LocalSessionFactoryBean sessionFactory() {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource());
-    sessionFactory.setPackagesToScan("com.ken3d.threedfy.Infrastructure.dal.entities");
+    sessionFactory.setPackagesToScan("com.ken3d.threedfy.infrastructure.dal.entities");
     sessionFactory.setHibernateProperties(hibernateProperties());
-
     return sessionFactory;
   }
 
@@ -57,7 +56,6 @@ public class HibernateConfiguration {
     hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl"));
     hibernateProperties
         .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
-
     return hibernateProperties;
   }
 }

@@ -2,26 +2,30 @@ package com.ken3d.threedfy.domain.user.registration;
 
 import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements IUserService {
 
   private final IEntityRepository<AccountEntityBase> accountRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserService(IEntityRepository<AccountEntityBase> accountRepository) {
+  public UserService(IEntityRepository<AccountEntityBase> accountRepository,
+      PasswordEncoder passwordEncoder) {
     this.accountRepository = accountRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
@@ -29,6 +33,12 @@ public class UserService implements IUserService {
     if (emailExist(userDto.getEmail()) || usernameExist(userDto.getUsername())) {
       throw new UserAlreadyExistException();
     }
+
+    User user = from(userDto);
+    setBasicUserRole(user);
+    Organization organization = createNewOrganization(user);
+    user.setOrganizations(new HashSet<>(Collections.singletonList(organization)));
+    accountRepository.create(user);
   }
 
   private boolean emailExist(String email) {
@@ -36,7 +46,8 @@ public class UserService implements IUserService {
   }
 
   private boolean usernameExist(String username) {
-    return accountRepository.selectAll(User.class, u -> u.getUsername().equals(username)).size() > 0;
+    return accountRepository.selectAll(User.class, u -> u.getUsername().equals(username)).size()
+        > 0;
   }
 
   private User from(UserDto userDto) {
@@ -45,14 +56,21 @@ public class UserService implements IUserService {
     user.setEmail(userDto.getEmail());
     user.setFirstName(userDto.getFirstName());
     user.setLastName(userDto.getLastName());
-    user.setPasswordHash(userDto.getPassword());
+    user.setPasswordHash(passwordEncoder.encode(userDto.getPassword()));
     user.setEnabled(true);
-
-    setBasicUserRole(user);
+    return user;
   }
 
   private void setBasicUserRole(User user) {
     Optional<Role> userRole = accountRepository.select(Role.class, r -> r.getAuthorityLevel() == 0);
     userRole.ifPresent(role -> user.setRoles(new HashSet<>(Collections.singletonList(role))));
+  }
+
+  private Organization createNewOrganization(User owner) {
+    Organization organization = new Organization();
+    organization.setName(owner.getUsername());
+    organization.setOwner(owner);
+    organization.setCollaborative(false);
+    return accountRepository.create(organization);
   }
 }

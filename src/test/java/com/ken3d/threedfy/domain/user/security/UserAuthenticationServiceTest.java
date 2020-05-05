@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;

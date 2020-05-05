@@ -1,6 +1,5 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
 import org.hibernate.Session;
 
 public abstract class EntityRepositoryBase<B extends Serializable> {
@@ -31,8 +30,7 @@ public abstract class EntityRepositoryBase<B extends Serializable> {
   }
 
   public <T extends B> List<T> selectAll(Class<T> type) {
-    String tableName = type.getAnnotation(Table.class).name();
-    return session.createQuery(SELECT_QUERY + tableName, type).list();
+    return session.createQuery(SELECT_QUERY + type.getName(), type).list();
   }
 
   public <T extends B> List<T> selectAll(Class<T> type, Predicate<T> where) {

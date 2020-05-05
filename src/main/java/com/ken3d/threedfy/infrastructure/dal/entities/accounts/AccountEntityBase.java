@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.domain.dao;
+package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
 import java.io.Serializable;
 import javax.persistence.Column;

@@ -3,14 +3,16 @@ package com.ken3d.threedfy.domain.user.registration;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
 import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.IUserServiceTest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserServiceTest extends IUserServiceTest {
@@ -41,14 +43,43 @@ public class UserServiceTest extends IUserServiceTest {
           User user = (User) args[0];
           user.setId(1);
           mockUserTable.add(user);
-      return user;
+          return user;
         }
     ).when(accountRepository).create(any(User.class));
+
+    doAnswer(invocation -> {
+          Object[] args = invocation.getArguments();
+          VerificationToken token = (VerificationToken) args[0];
+          token.setId(1);
+          mockTokenTable.add(token);
+          return token;
+        }
+    ).when(accountRepository).create(any(VerificationToken.class));
+
+    doAnswer(invocation -> {
+          Object[] args = invocation.getArguments();
+          User user = (User) args[0];
+
+          Optional<User> alreadyThere = mockUserTable.stream()
+              .filter(u -> u.getUsername().equals(user.getUsername())).findFirst();
+          if (alreadyThere.isPresent()) {
+            int index = mockUserTable.indexOf(alreadyThere.get());
+            mockUserTable.set(index, user);
+          }
+
+          return user;
+        }
+    ).when(accountRepository).update(any(User.class));
 
     doAnswer(invocation -> {
           return mockOrganizationTable.stream().filter(o -> o.getId() == 1).findFirst();
         }
     ).when(accountRepository).select(Organization.class, 1);
+
+    doAnswer(invocation -> {
+          return mockTokenTable.stream().filter(o -> o.getId() == 1).findFirst();
+        }
+    ).when(accountRepository).select(VerificationToken.class, 1);
 
     doAnswer(invocation -> {
           return mockUserTable.stream().filter(u -> u.getId() == 1).findFirst();

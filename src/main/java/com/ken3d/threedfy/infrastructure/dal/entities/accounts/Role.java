@@ -1,6 +1,5 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -34,14 +33,6 @@ public class Role extends AccountEntityBase {
   @ManyToMany(mappedBy = "roles")
   private Set<User> users = new HashSet<>();
 
-  @ManyToMany(cascade = { CascadeType.ALL })
-  @JoinTable(
-      name = "Role_Module",
-      joinColumns = { @JoinColumn(name = "Role_FK", referencedColumnName = "Id") },
-      inverseJoinColumns = { @JoinColumn(name = "Module_FK", referencedColumnName = "Id") }
-  )
-  private Set<Module> modules = new HashSet<>();
-
   @Column(name = "Authority_Level", nullable = false)
   @ColumnDefault("-1")
   private int authorityLevel;
@@ -60,15 +51,6 @@ public class Role extends AccountEntityBase {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public Set<Module> getModules() {
-    return modules;
-  }
-
-  public void setModules(
-      Set<Module> modules) {
-    this.modules = modules;
   }
 
   public Set<User> getUsers() {
@@ -108,7 +90,6 @@ public class Role extends AccountEntityBase {
         && authorityLevel == role.authorityLevel
         && Objects.equals(name, role.name)
         && Objects.equals(description, role.description)
-        && Objects.equals(users, role.users)
-        && Objects.equals(modules, role.modules);
+        && Objects.equals(users, role.users);
   }
 }

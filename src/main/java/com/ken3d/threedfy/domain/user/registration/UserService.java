@@ -1,21 +1,25 @@
 package com.ken3d.threedfy.domain.user.registration;
 
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
+import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
 import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserService implements IUserService {
 
   private final IEntityRepository<AccountEntityBase> accountRepository;
@@ -29,7 +33,7 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public void registerNewUserAccount(UserDto userDto) {
+  public User registerNewUserAccount(UserDto userDto) {
     if (emailExist(userDto.getEmail()) || usernameExist(userDto.getUsername())) {
       throw new UserAlreadyExistException();
     }
@@ -38,7 +42,34 @@ public class UserService implements IUserService {
     setBasicUserRole(user);
     Organization organization = createNewOrganization(user);
     user.setOrganizations(new HashSet<>(Collections.singletonList(organization)));
-    accountRepository.create(user);
+    return accountRepository.create(user);
+  }
+
+  @Override
+  public User getUser(String verificationToken) {
+    Optional<VerificationToken> tokenEntity = getVerificationToken(verificationToken);
+    if (tokenEntity.isPresent()) {
+      return tokenEntity.get().getUser();
+    }
+    throw new InvalidVerificationTokenException();
+  }
+
+  @Override
+  public void saveRegisteredUser(User user) {
+    accountRepository.update(user);
+  }
+
+  @Override
+  public void createVerificationToken(User user, String token) {
+    VerificationToken newAuthToken = new VerificationToken();
+    newAuthToken.setToken(token);
+    newAuthToken.setUser(user);
+    accountRepository.create(newAuthToken);
+  }
+
+  @Override
+  public Optional<VerificationToken> getVerificationToken(String token) {
+    return accountRepository.select(VerificationToken.class, vt -> vt.getToken().equals(token));
   }
 
   private boolean emailExist(String email) {
@@ -57,7 +88,7 @@ public class UserService implements IUserService {
     user.setFirstName(userDto.getFirstName());
     user.setLastName(userDto.getLastName());
     user.setPasswordHash(passwordEncoder.encode(userDto.getPassword()));
-    user.setEnabled(true);
+    user.setEnabled(false);
     return user;
   }
 

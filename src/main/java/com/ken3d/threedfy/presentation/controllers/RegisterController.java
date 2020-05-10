@@ -8,7 +8,9 @@ import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -74,17 +76,17 @@ public class RegisterController {
       @RequestParam("token") String token) {
 
     Locale locale = request.getLocale();
-    VerificationToken verificationToken = userService.getVerificationToken(token);
+    Optional<VerificationToken> verificationToken = userService.getVerificationToken(token);
 
-    if (verificationToken == null) {
+    if (!verificationToken.isPresent()) {
       String message = messages.getMessage("auth.message.invalidToken", null, locale);
       model.addAttribute("message", message);
       return "redirect:/badUser";
     }
 
-    User user = verificationToken.getUser();
+    User user = verificationToken.get().getUser();
 
-    if (isTokenExpired(verificationToken)) {
+    if (isTokenExpired(verificationToken.get())) {
       String messageValue = messages.getMessage("auth.message.expired", null, locale);
       model.addAttribute("message", messageValue);
       return "redirect:/badUser";

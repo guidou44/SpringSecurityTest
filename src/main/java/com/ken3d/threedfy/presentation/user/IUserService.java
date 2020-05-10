@@ -2,6 +2,7 @@ package com.ken3d.threedfy.presentation.user;
 
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
+import java.util.Optional;
 
 public interface IUserService {
 
@@ -13,6 +14,6 @@ public interface IUserService {
 
   void createVerificationToken(User user, String token);
 
-  VerificationToken getVerificationToken(String VerificationToken);
+  Optional<VerificationToken> getVerificationToken(String VerificationToken);
 
 }

@@ -3,17 +3,16 @@ package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "Organization_Group")
@@ -34,13 +33,9 @@ public class OrganizationGroup extends AccountEntityBase {
   @ManyToMany(mappedBy = "organizationGroups")
   private Set<User> users = new HashSet<>();
 
-  @ManyToMany(cascade = { CascadeType.ALL })
-  @JoinTable(
-      name = "OrganizationGroup_Module",
-      joinColumns = { @JoinColumn(name = "Organization_Group_FK", referencedColumnName = "Id") },
-      inverseJoinColumns = { @JoinColumn(name = "Module_FK", referencedColumnName = "Id") }
-  )
-  private Set<Module> modules = new HashSet<>();
+  @Column(name = "Authority_Level", nullable = false)
+  @ColumnDefault("-1")
+  private int authorityLevel;
 
   public String getName() {
     return name;
@@ -67,15 +62,6 @@ public class OrganizationGroup extends AccountEntityBase {
     this.users = users;
   }
 
-  public Set<Module> getModules() {
-    return modules;
-  }
-
-  public void setModules(
-      Set<Module> modules) {
-    this.modules = modules;
-  }
-
   public int getId() {
     return id;
   }
@@ -96,7 +82,14 @@ public class OrganizationGroup extends AccountEntityBase {
     return id == that.id
         && Objects.equals(name, that.name)
         && Objects.equals(organization, that.organization)
-        && Objects.equals(users, that.users)
-        && Objects.equals(modules, that.modules);
+        && Objects.equals(users, that.users);
+  }
+
+  public int getAuthorityLevel() {
+    return authorityLevel;
+  }
+
+  public void setAuthorityLevel(int authorityLevel) {
+    this.authorityLevel = authorityLevel;
   }
 }

@@ -1,8 +1,8 @@
 package com.ken3d.threedfy.domain.user.registration;
 
+import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
-import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;

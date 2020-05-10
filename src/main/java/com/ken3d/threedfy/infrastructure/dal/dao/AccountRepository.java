@@ -1,7 +1,7 @@
 package com.ken3d.threedfy.infrastructure.dal.dao;
 
-import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import org.springframework.stereotype.Repository;
 
 @Repository

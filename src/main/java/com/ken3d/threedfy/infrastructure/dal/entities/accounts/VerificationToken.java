@@ -85,11 +85,12 @@ public class VerificationToken extends AccountEntityBase {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+    
     VerificationToken that = (VerificationToken) o;
-    return id == that.id &&
-        Objects.equals(token, that.token) &&
-        Objects.equals(user, that.user) &&
-        Objects.equals(expiryDate, that.expiryDate);
+    return id == that.id
+        && Objects.equals(token, that.token)
+        && Objects.equals(user, that.user)
+        && Objects.equals(expiryDate, that.expiryDate);
   }
 
   @Override

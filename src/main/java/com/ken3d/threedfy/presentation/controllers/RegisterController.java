@@ -30,7 +30,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class RegisterController {
 
   private final IUserService userService;
-  private final MessageSource messages;
   private ApplicationEventPublisher eventPublisher;
 
   @Autowired
@@ -38,7 +37,6 @@ public class RegisterController {
       @Qualifier("messageSource") MessageSource messages,
       ApplicationEventPublisher eventPublisher) {
     this.userService = userService;
-    this.messages = messages;
     this.eventPublisher = eventPublisher;
   }
 
@@ -79,7 +77,7 @@ public class RegisterController {
     Optional<VerificationToken> verificationToken = userService.getVerificationToken(token);
 
     if (!verificationToken.isPresent()) {
-      String message = messages.getMessage("auth.message.invalidToken", null, locale);
+      String message = "Invalid token";
       model.addAttribute("message", message);
       return "redirect:/badUser";
     }
@@ -87,7 +85,7 @@ public class RegisterController {
     User user = verificationToken.get().getUser();
 
     if (isTokenExpired(verificationToken.get())) {
-      String messageValue = messages.getMessage("auth.message.expired", null, locale);
+      String messageValue = "Confirmation expired";
       model.addAttribute("message", messageValue);
       return "redirect:/badUser";
     }

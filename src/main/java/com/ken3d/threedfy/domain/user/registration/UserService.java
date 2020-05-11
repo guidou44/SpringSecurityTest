@@ -40,9 +40,11 @@ public class UserService implements IUserService {
 
     User user = from(userDto);
     setBasicUserRole(user);
-    Organization organization = createNewOrganization(user);
-    user.setOrganizations(new HashSet<>(Collections.singletonList(organization)));
-    return accountRepository.create(user);
+    user = accountRepository.create(user);
+
+    createNewOrganization(user);
+
+    return user;
   }
 
   @Override
@@ -97,11 +99,11 @@ public class UserService implements IUserService {
     userRole.ifPresent(role -> user.setRoles(new HashSet<>(Collections.singletonList(role))));
   }
 
-  private Organization createNewOrganization(User owner) {
+  private void createNewOrganization(User owner) {
     Organization organization = new Organization();
+    organization.setCollaborative(false);
     organization.setName(owner.getUsername());
     organization.setOwner(owner);
-    organization.setCollaborative(false);
-    return accountRepository.create(organization);
+    accountRepository.create(organization);
   }
 }

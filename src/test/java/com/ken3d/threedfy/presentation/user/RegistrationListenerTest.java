@@ -25,7 +25,6 @@ public class RegistrationListenerTest {
   private static final String CONFIRM_EMAIL_MESSAGE = "Confirm test email please";
 
   private final IUserService service = mock(IUserService.class);
-  private final MessageSource messages = mock(MessageSource.class);
   private final JavaMailSender mailSender = mock(JavaMailSender.class);
   private final Environment env = mock(Environment.class);
   private final ArgumentCaptor<SimpleMailMessage> emailArgumentCaptor = ArgumentCaptor
@@ -36,7 +35,6 @@ public class RegistrationListenerTest {
 
   @BeforeEach
   void setUp() {
-    willReturn(CONFIRM_EMAIL_MESSAGE).given(messages).getMessage("message.regSucc", null, LOCALE);
     willReturn(BASE_APP_URL).given(env).getProperty("base.url");
   }
 
@@ -46,7 +44,7 @@ public class RegistrationListenerTest {
     user.setEmail(USER_EMAIL);
     registrationCompleteEvent = new OnRegistrationCompleteEvent(user, LOCALE, REDIRECT_URL);
     RegistrationListener registrationListener =
-        new RegistrationListener(service, messages, mailSender, env);
+        new RegistrationListener(service, mailSender, env);
 
     registrationListener.onApplicationEvent(registrationCompleteEvent);
     verify(mailSender, times(1)).send(emailArgumentCaptor.capture());

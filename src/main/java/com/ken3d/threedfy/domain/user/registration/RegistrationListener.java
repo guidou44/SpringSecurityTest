@@ -5,9 +5,7 @@ import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.OnRegistrationCompleteEvent;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.SimpleMailMessage;
@@ -18,16 +16,13 @@ import org.springframework.stereotype.Component;
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
   private final IUserService service;
-  private final MessageSource messages;
   private final JavaMailSender mailSender;
   private final Environment env;
 
   @Autowired
   public RegistrationListener(IUserService service,
-      @Qualifier("messageSource") MessageSource messages,
       JavaMailSender mailSender, Environment env) {
     this.service = service;
-    this.messages = messages;
     this.mailSender = mailSender;
     this.env = env;
   }
@@ -46,7 +41,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     String recipientAddress = user.getEmail();
     String subject = "3Dify Registration Confirmation";
     String confirmationUrl = event.getAppUrl() + "/registrationConfirm.html?token=" + token;
-    String message = messages.getMessage("message.regSucc", null, event.getLocale());
+    String message = "Please, confirm your email to get going with 3dify: ";
 
     SimpleMailMessage email = new SimpleMailMessage();
     email.setTo(recipientAddress);

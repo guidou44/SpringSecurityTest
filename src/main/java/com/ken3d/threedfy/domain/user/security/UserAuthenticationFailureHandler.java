@@ -30,7 +30,7 @@ public class UserAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
   @Override
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
       AuthenticationException exception) throws IOException, ServletException {
-    setDefaultFailureUrl("/login.html?error=true");
+    setDefaultFailureUrl("/login?error=true");
 
     super.onAuthenticationFailure(request, response, exception);
 

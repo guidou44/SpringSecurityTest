@@ -17,5 +17,16 @@ public class MainController {
   public String getDashboard() {
     return "dashboard";
   }
+
+
+  @GetMapping("/error")
+  public String getError() {
+    return "error";
+  }
+
+  @GetMapping("/confirm-email")
+  public String getConfirmEmail() {
+    return "confirm-email";
+  }
 }
 

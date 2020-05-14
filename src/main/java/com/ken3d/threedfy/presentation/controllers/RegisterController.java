@@ -47,7 +47,7 @@ public class RegisterController {
     return "register";
   }
 
-  @PostMapping("/registration")
+  @PostMapping("/register")
   public ModelAndView registerUserAccount(
       @ModelAttribute("user") @Valid UserDto userDto,
       HttpServletRequest request, Errors errors) {
@@ -63,7 +63,8 @@ public class RegisterController {
       mav.addObject("message", "An account for that username/email already exists.");
       return mav;
     } catch (RuntimeException ex) {
-      return new ModelAndView("emailError", "user", userDto);
+      ModelAndView mav = new ModelAndView("error");
+      return mav;
     }
 
     return new ModelAndView("successRegister", "user", userDto);

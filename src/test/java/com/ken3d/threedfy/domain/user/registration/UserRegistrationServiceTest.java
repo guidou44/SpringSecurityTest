@@ -8,23 +8,23 @@ import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
-import com.ken3d.threedfy.presentation.user.IUserService;
-import com.ken3d.threedfy.presentation.user.IUserServiceTest;
+import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
+import com.ken3d.threedfy.presentation.user.IUserRegistrationServiceTest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class UserServiceTest extends IUserServiceTest {
+public class UserRegistrationServiceTest extends IUserRegistrationServiceTest {
 
 
   private List<Organization> mockOrganizationTable = new ArrayList<>();
 
   @Override
-  protected IUserService givenUserService(IEntityRepository<AccountEntityBase> accountRepository,
+  protected IUserRegistrationService givenUserService(IEntityRepository<AccountEntityBase> accountRepository,
       PasswordEncoder encoder) {
     setupMocks(accountRepository);
-    return new UserService(accountRepository, encoder);
+    return new UserRegistrationService(accountRepository, encoder);
   }
 
   private void setupMocks(IEntityRepository<AccountEntityBase> accountRepository) {

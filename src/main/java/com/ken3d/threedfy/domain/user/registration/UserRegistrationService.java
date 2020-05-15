@@ -7,7 +7,7 @@ import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
-import com.ken3d.threedfy.presentation.user.IUserService;
+import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
 import java.util.Calendar;
@@ -22,13 +22,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class UserService implements IUserService {
+public class UserRegistrationService implements IUserRegistrationService {
 
   private final IEntityRepository<AccountEntityBase> accountRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserService(IEntityRepository<AccountEntityBase> accountRepository,
+  public UserRegistrationService(IEntityRepository<AccountEntityBase> accountRepository,
       PasswordEncoder passwordEncoder) {
     this.accountRepository = accountRepository;
     this.passwordEncoder = passwordEncoder;

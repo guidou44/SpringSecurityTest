@@ -2,38 +2,45 @@ package com.ken3d.threedfy.presentation.controllers;
 
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
-import com.ken3d.threedfy.presentation.user.IUserService;
+import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
 import com.ken3d.threedfy.presentation.user.OnRegistrationCompleteEvent;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class RegisterController {
 
-  private final IUserService userService;
+  private final IUserRegistrationService userService;
   private ApplicationEventPublisher eventPublisher;
 
   @Autowired
-  public RegisterController(IUserService userService,
+  public RegisterController(IUserRegistrationService userService,
       @Qualifier("messageSource") MessageSource messages,
       ApplicationEventPublisher eventPublisher) {
     this.userService = userService;
@@ -50,8 +57,7 @@ public class RegisterController {
   @PostMapping("/register")
   public ModelAndView registerUserAccount(
       @ModelAttribute("user") @Valid UserDto userDto,
-      HttpServletRequest request, Errors errors) {
-
+      HttpServletRequest request, BindingResult result) {
     try {
       User user = userService.registerNewUserAccount(userDto);
 
@@ -68,6 +74,37 @@ public class RegisterController {
     }
 
     return new ModelAndView("confirm-email");
+  }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler({BindException.class })
+  public ModelAndView validationError(BindException ex) {
+    List<String> errorMessages = getErrorMessages(ex);
+
+    String errorMessageSingle = errorMessages.stream().reduce("", String::concat);
+
+    ModelAndView mav = new ModelAndView("register");
+    mav.addObject("message", errorMessageSingle);
+    return mav;
+  }
+
+  private List<String> getErrorMessages(BindException ex) {
+    BindingResult result = ex.getBindingResult();
+    List<String> errorMessages = new ArrayList<>();
+
+    for (Object object : result.getAllErrors()) {
+      if (object instanceof FieldError) {
+        FieldError fieldError = (FieldError) object;
+        errorMessages.add(fieldError.getDefaultMessage() + "\n");
+      }
+
+      if (object instanceof ObjectError) {
+        ObjectError objectError = (ObjectError) object;
+        errorMessages.add(objectError.getDefaultMessage() + "\n");
+      }
+    }
+
+    return errorMessages;
   }
 
   @GetMapping("/registrationConfirm")

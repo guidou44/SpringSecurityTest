@@ -17,16 +17,6 @@ import org.springframework.web.servlet.LocaleResolver;
 @Component
 public class UserAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-  private final MessageSource messages;
-  private final LocaleResolver localeResolver;
-
-  @Autowired
-  public UserAuthenticationFailureHandler(@Qualifier("messageSource") MessageSource messages,
-      LocaleResolver localeResolver) {
-    this.messages = messages;
-    this.localeResolver = localeResolver;
-  }
-
   @Override
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
       AuthenticationException exception) throws IOException, ServletException {
@@ -34,14 +24,12 @@ public class UserAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 
     super.onAuthenticationFailure(request, response, exception);
 
-    Locale locale = localeResolver.resolveLocale(request);
-
-    String errorMessage = messages.getMessage("message.badCredentials", null, locale);
+    String errorMessage = "Bad username/email or password. Cannot find matching account.";
 
     if (exception.getMessage().equalsIgnoreCase("User is disabled")) {
-      errorMessage = messages.getMessage("auth.message.disabled", null, locale);
+      errorMessage = "This User is this disabled. Please create another account.";
     } else if (exception.getMessage().equalsIgnoreCase("User account has expired")) {
-      errorMessage = messages.getMessage("auth.message.expired", null, locale);
+      errorMessage = "It seems this account has expired! It is no longer valid.";
     }
 
     request.getSession().setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, errorMessage);

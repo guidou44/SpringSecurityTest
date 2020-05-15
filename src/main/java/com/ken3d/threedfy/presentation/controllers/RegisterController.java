@@ -67,7 +67,7 @@ public class RegisterController {
       return mav;
     }
 
-    return new ModelAndView("successRegister", "user", userDto);
+    return new ModelAndView("confirm-email");
   }
 
   @GetMapping("/registrationConfirm")

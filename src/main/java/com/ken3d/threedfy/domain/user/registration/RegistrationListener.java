@@ -1,7 +1,7 @@
 package com.ken3d.threedfy.domain.user.registration;
 
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
-import com.ken3d.threedfy.presentation.user.IUserService;
+import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
 import com.ken3d.threedfy.presentation.user.OnRegistrationCompleteEvent;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
-  private final IUserService service;
+  private final IUserRegistrationService service;
   private final JavaMailSender mailSender;
   private final Environment env;
 
   @Autowired
-  public RegistrationListener(IUserService service,
+  public RegistrationListener(IUserRegistrationService service,
       JavaMailSender mailSender, Environment env) {
     this.service = service;
     this.mailSender = mailSender;

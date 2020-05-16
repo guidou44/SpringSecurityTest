@@ -12,7 +12,6 @@ import java.util.Locale;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
-import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,7 +23,7 @@ public class RegistrationListenerTest {
   private static final String BASE_APP_URL = "http://test.com";
   private static final String CONFIRM_EMAIL_MESSAGE = "Confirm test email please";
 
-  private final IUserService service = mock(IUserService.class);
+  private final IUserRegistrationService service = mock(IUserRegistrationService.class);
   private final JavaMailSender mailSender = mock(JavaMailSender.class);
   private final Environment env = mock(Environment.class);
   private final ArgumentCaptor<SimpleMailMessage> emailArgumentCaptor = ArgumentCaptor

@@ -1,9 +1,7 @@
 package com.ken3d.threedfy.domain.user.security;
 
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
-import com.ken3d.threedfy.domain.user.Authority;
-import com.ken3d.threedfy.domain.user.UserAuthDetails;
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import java.util.Collection;
@@ -33,12 +31,23 @@ public class UserAuthenticationService implements UserDetailsService {
     if (user.isPresent()) {
       return buildUserDetails(user.get());
     }
+
+    user = loadUserByEmail(userName);
+    if (user.isPresent()) {
+      return buildUserDetails(user.get());
+    }
+
     throw new UsernameNotFoundException(userName);
+  }
+
+  private Optional<User> loadUserByEmail(String email) {
+    return accountRepository.select(User.class, u -> u.getEmail().equals(email));
   }
 
   private UserDetails buildUserDetails(User user) {
     Collection<Authority> authorities = buildAuthorities(user.getRoles());
-    return new UserAuthDetails(user.getUsername(), user.getPasswordHash(), true, authorities);
+    return new UserAuthDetails(user.getUsername(), user.getPasswordHash(), user.isEnabled(),
+        authorities);
   }
 
   private Collection<Authority> buildAuthorities(Collection<Role> roles) {

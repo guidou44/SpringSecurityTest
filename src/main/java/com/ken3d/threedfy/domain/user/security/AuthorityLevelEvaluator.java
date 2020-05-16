@@ -1,7 +1,5 @@
 package com.ken3d.threedfy.domain.user.security;
 
-import com.ken3d.threedfy.domain.user.Authority;
-import com.ken3d.threedfy.domain.user.UserAuthDetails;
 import com.ken3d.threedfy.domain.user.exceptions.AuthorityWithoutLevelException;
 import java.util.Collection;
 import java.util.Comparator;

@@ -1,6 +1,5 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
-import com.ken3d.threedfy.domain.dao.AccountEntityBase;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -62,6 +62,11 @@ public class User extends AccountEntityBase {
 
   @OneToMany(mappedBy = "owner")
   private Set<Organization> organizations = new HashSet<>();
+
+  @OneToOne(mappedBy = "user")
+  private VerificationToken verificationToken;
+
+  //region Getters and Setters
 
   public int getId() {
     return id;
@@ -144,6 +149,17 @@ public class User extends AccountEntityBase {
   public String getPasswordHash() {
     return passwordHash;
   }
+
+  public VerificationToken getVerificationToken() {
+    return verificationToken;
+  }
+
+  public void setVerificationToken(
+      VerificationToken verificationToken) {
+    this.verificationToken = verificationToken;
+  }
+
+  //endregion
 
   @Override
   public boolean equals(Object o) {

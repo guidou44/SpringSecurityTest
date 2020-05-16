@@ -1,5 +1,6 @@
 package com.ken3d.threedfy;
 
+import com.ken3d.threedfy.domain.user.security.UserAuthenticationFailureHandler;
 import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.domain.user.security.UserAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -18,18 +19,24 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private UserAuthenticationService userAuthService;
   private UserAuthenticationSuccessHandler userAuthSuccessHandler;
+  private UserAuthenticationFailureHandler userAuthFailureHandler;
+  private PasswordEncoder passwordEncoder;
 
   @Autowired
   public WebSecurityConfiguration(UserAuthenticationService userAuthService,
-      UserAuthenticationSuccessHandler userAuthSuccessHandler) {
+      UserAuthenticationSuccessHandler userAuthSuccessHandler,
+      UserAuthenticationFailureHandler userAuthFailureHandler,
+      PasswordEncoder passwordEncoder) {
     this.userAuthService = userAuthService;
     this.userAuthSuccessHandler = userAuthSuccessHandler;
+    this.userAuthFailureHandler = userAuthFailureHandler;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
     authManagerBuilder.userDetailsService(userAuthService)
-        .passwordEncoder(new BCryptPasswordEncoder());
+        .passwordEncoder(passwordEncoder);
   }
 
   @Override
@@ -41,6 +48,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .formLogin()
         .loginPage("/login")
         .successHandler(userAuthSuccessHandler)
+        .failureHandler(userAuthFailureHandler)
         .and()
         .logout().permitAll().logoutSuccessUrl("/login")
         .and()

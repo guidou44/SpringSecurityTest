@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.domain.user.registration;
+package com.ken3d.threedfy.domain.user;
 
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
@@ -7,12 +7,11 @@ import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
-import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
+import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -22,13 +21,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class UserRegistrationService implements IUserRegistrationService {
+public class UserService implements IUserService {
 
   private final IEntityRepository<AccountEntityBase> accountRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserRegistrationService(IEntityRepository<AccountEntityBase> accountRepository,
+  public UserService(IEntityRepository<AccountEntityBase> accountRepository,
       PasswordEncoder passwordEncoder) {
     this.accountRepository = accountRepository;
     this.passwordEncoder = passwordEncoder;

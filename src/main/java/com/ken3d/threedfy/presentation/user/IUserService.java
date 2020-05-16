@@ -4,7 +4,7 @@ import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
 import java.util.Optional;
 
-public interface IUserRegistrationService {
+public interface IUserService {
 
   User registerNewUserAccount(UserDto userDto);
 

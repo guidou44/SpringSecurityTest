@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.domain.user.registration;
+package com.ken3d.threedfy.domain.user;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -8,23 +8,23 @@ import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
-import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
-import com.ken3d.threedfy.presentation.user.IUserRegistrationServiceTest;
+import com.ken3d.threedfy.presentation.user.IUserService;
+import com.ken3d.threedfy.presentation.user.IUserServiceTest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class UserRegistrationServiceTest extends IUserRegistrationServiceTest {
+public class UserServiceTest extends IUserServiceTest {
 
 
   private List<Organization> mockOrganizationTable = new ArrayList<>();
 
   @Override
-  protected IUserRegistrationService givenUserService(IEntityRepository<AccountEntityBase> accountRepository,
+  protected IUserService givenUserService(IEntityRepository<AccountEntityBase> accountRepository,
       PasswordEncoder encoder) {
     setupMocks(accountRepository);
-    return new UserRegistrationService(accountRepository, encoder);
+    return new UserService(accountRepository, encoder);
   }
 
   private void setupMocks(IEntityRepository<AccountEntityBase> accountRepository) {

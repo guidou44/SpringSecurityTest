@@ -2,7 +2,7 @@ package com.ken3d.threedfy.presentation.controllers;
 
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
-import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
+import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.OnRegistrationCompleteEvent;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
@@ -36,11 +36,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class RegisterController {
 
-  private final IUserRegistrationService userService;
+  private final IUserService userService;
   private ApplicationEventPublisher eventPublisher;
 
   @Autowired
-  public RegisterController(IUserRegistrationService userService,
+  public RegisterController(IUserService userService,
       @Qualifier("messageSource") MessageSource messages,
       ApplicationEventPublisher eventPublisher) {
     this.userService = userService;

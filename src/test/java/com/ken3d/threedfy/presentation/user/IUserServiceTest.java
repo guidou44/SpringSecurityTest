@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public abstract class IUserRegistrationServiceTest {
+public abstract class IUserServiceTest {
 
   private static final String FIRST_EMAIL_ADDRESS = "test@test.com";
   private static final String SECOND_EMAIL_ADDRESS = "22@22.com";
@@ -43,7 +43,7 @@ public abstract class IUserRegistrationServiceTest {
 
   @Test
   public void givenNewUser_whenRegistering_thenItRegisterNewUserProperly() {
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
 
     userService.registerNewUserAccount(user);
@@ -58,7 +58,7 @@ public abstract class IUserRegistrationServiceTest {
 
   @Test
   public void givenRegisteredUser_whenSaveUser_thenItUpdatesUserProperly() {
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -79,7 +79,7 @@ public abstract class IUserRegistrationServiceTest {
 
   @Test
   public void givenNewUser_whenRegistering_thenItCreatesNewOrganizationForUserProperly() {
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
 
     userService.registerNewUserAccount(user);
@@ -92,7 +92,7 @@ public abstract class IUserRegistrationServiceTest {
 
   @Test
   public void givenAlreadyUsedEmail_whenRegistering_thenItThrowsProperException() {
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     willReturn(Arrays.asList(user)).given(accountRepository)
@@ -106,7 +106,7 @@ public abstract class IUserRegistrationServiceTest {
 
   @Test
   public void givenAlreadyUsedUserName_whenRegistering_thenItThrowsProperException() {
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     willReturn(Arrays.asList(user)).given(accountRepository)
@@ -122,7 +122,7 @@ public abstract class IUserRegistrationServiceTest {
   public void givenNewRegisteredUser_whenCreatingToken_thenItCreatesTokenWithProperRelations() {
     willReturn(mockTokenTable.stream().reduce((first, second) -> second))
         .given(accountRepository).select(any(Class.class), any(Predicate.class));
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -143,7 +143,7 @@ public abstract class IUserRegistrationServiceTest {
         }
     ).when(accountRepository).select(any(Class.class), any(Predicate.class));
 
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -163,7 +163,7 @@ public abstract class IUserRegistrationServiceTest {
           return mockTokenTable.stream().reduce((first, second) -> second);
         }
     ).when(accountRepository).select(any(Class.class), any(Predicate.class));
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -177,7 +177,7 @@ public abstract class IUserRegistrationServiceTest {
 
   @Test
   public void givenNoUserWithToken_whenGetByToken_thenItThrowsProperException() {
-    IUserRegistrationService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -198,6 +198,6 @@ public abstract class IUserRegistrationServiceTest {
     return user;
   }
 
-  protected abstract IUserRegistrationService givenUserService(
+  protected abstract IUserService givenUserService(
       IEntityRepository<AccountEntityBase> accountRepository, PasswordEncoder encoder);
 }

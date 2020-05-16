@@ -10,7 +10,9 @@ import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken
 import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -66,6 +68,9 @@ public class UserService implements IUserService {
     VerificationToken newAuthToken = new VerificationToken();
     newAuthToken.setToken(token);
     newAuthToken.setUser(user);
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.DAY_OF_MONTH, 1);
+    newAuthToken.setExpiryDate(cal.getTime());
     accountRepository.create(newAuthToken);
   }
 

@@ -40,10 +40,11 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     String recipientAddress = user.getEmail();
     String subject = "3Dify Registration Confirmation";
-    String confirmationUrl = event.getAppUrl() + "/registrationConfirm.html?token=" + token;
+    String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
     String message = "Please, confirm your email to get going with 3dify: ";
 
     SimpleMailMessage email = new SimpleMailMessage();
+    email.setFrom(env.getProperty("spring.mail.username"));
     email.setTo(recipientAddress);
     email.setSubject(subject);
     email.setText(message + "\r\n" + env.getProperty("base.url") + confirmationUrl);

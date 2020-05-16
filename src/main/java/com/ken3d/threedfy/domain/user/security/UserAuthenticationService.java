@@ -31,7 +31,17 @@ public class UserAuthenticationService implements UserDetailsService {
     if (user.isPresent()) {
       return buildUserDetails(user.get());
     }
+
+    user = loadUserByEmail(userName);
+    if (user.isPresent()) {
+      return buildUserDetails(user.get());
+    }
+
     throw new UsernameNotFoundException(userName);
+  }
+
+  private Optional<User> loadUserByEmail(String email) {
+    return accountRepository.select(User.class, u -> u.getEmail().equals(email));
   }
 
   private UserDetails buildUserDetails(User user) {

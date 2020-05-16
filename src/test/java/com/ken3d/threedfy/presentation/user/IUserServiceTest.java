@@ -9,6 +9,8 @@ import static org.mockito.Mockito.mock;
 
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
+import com.ken3d.threedfy.domain.user.security.SecurityContextHelper;
+import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
@@ -34,16 +36,19 @@ public abstract class IUserServiceTest {
   protected List<VerificationToken> mockTokenTable = new ArrayList<>();
   private IEntityRepository<AccountEntityBase> accountRepository;
   private PasswordEncoder encoder;
+  private UserAuthenticationService userAuthenticationService;
 
   @BeforeEach
   void setUp() {
     encoder = new BCryptPasswordEncoder();
     accountRepository = mock(IEntityRepository.class);
+    userAuthenticationService = mock(UserAuthenticationService.class);
   }
 
   @Test
   public void givenNewUser_whenRegistering_thenItRegisterNewUserProperly() {
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
 
     userService.registerNewUserAccount(user);
@@ -58,7 +63,8 @@ public abstract class IUserServiceTest {
 
   @Test
   public void givenRegisteredUser_whenSaveUser_thenItUpdatesUserProperly() {
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -79,7 +85,8 @@ public abstract class IUserServiceTest {
 
   @Test
   public void givenNewUser_whenRegistering_thenItCreatesNewOrganizationForUserProperly() {
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
 
     userService.registerNewUserAccount(user);
@@ -92,7 +99,8 @@ public abstract class IUserServiceTest {
 
   @Test
   public void givenAlreadyUsedEmail_whenRegistering_thenItThrowsProperException() {
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     willReturn(Arrays.asList(user)).given(accountRepository)
@@ -106,7 +114,8 @@ public abstract class IUserServiceTest {
 
   @Test
   public void givenAlreadyUsedUserName_whenRegistering_thenItThrowsProperException() {
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     willReturn(Arrays.asList(user)).given(accountRepository)
@@ -122,7 +131,8 @@ public abstract class IUserServiceTest {
   public void givenNewRegisteredUser_whenCreatingToken_thenItCreatesTokenWithProperRelations() {
     willReturn(mockTokenTable.stream().reduce((first, second) -> second))
         .given(accountRepository).select(any(Class.class), any(Predicate.class));
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -143,7 +153,8 @@ public abstract class IUserServiceTest {
         }
     ).when(accountRepository).select(any(Class.class), any(Predicate.class));
 
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
@@ -163,28 +174,30 @@ public abstract class IUserServiceTest {
           return mockTokenTable.stream().reduce((first, second) -> second);
         }
     ).when(accountRepository).select(any(Class.class), any(Predicate.class));
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
     final String token = "123abc456";
     userService.createVerificationToken(registeredUser.get(), token);
 
-    User userGetByToken = userService.getUser(token);
+    User userGetByToken = userService.getUserForToken(token);
 
     assertThat(userGetByToken).isEqualTo(registeredUser.get());
   }
 
   @Test
   public void givenNoUserWithToken_whenGetByToken_thenItThrowsProperException() {
-    IUserService userService = givenUserService(accountRepository, encoder);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
     UserDto user = givenUserDto();
     userService.registerNewUserAccount(user);
     Optional<User> registeredUser = accountRepository.select(User.class, 1);
     final String token = "123abc456";
     userService.createVerificationToken(registeredUser.get(), token);
 
-    assertThrows(InvalidVerificationTokenException.class, () -> userService.getUser(token));
+    assertThrows(InvalidVerificationTokenException.class, () -> userService.getUserForToken(token));
   }
 
   private UserDto givenUserDto() {
@@ -199,5 +212,6 @@ public abstract class IUserServiceTest {
   }
 
   protected abstract IUserService givenUserService(
-      IEntityRepository<AccountEntityBase> accountRepository, PasswordEncoder encoder);
+      IEntityRepository<AccountEntityBase> accountRepository, PasswordEncoder encoder,
+      UserAuthenticationService userAuthenticationService);
 }

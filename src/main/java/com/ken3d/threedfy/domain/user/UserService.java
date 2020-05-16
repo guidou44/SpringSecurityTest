@@ -2,6 +2,7 @@ package com.ken3d.threedfy.domain.user;
 
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
+import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
@@ -24,13 +25,15 @@ import org.springframework.stereotype.Service;
 public class UserService implements IUserService {
 
   private final IEntityRepository<AccountEntityBase> accountRepository;
+  private final UserAuthenticationService userAuthService;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
   public UserService(IEntityRepository<AccountEntityBase> accountRepository,
-      PasswordEncoder passwordEncoder) {
+      PasswordEncoder passwordEncoder, UserAuthenticationService userAuthService) {
     this.accountRepository = accountRepository;
     this.passwordEncoder = passwordEncoder;
+    this.userAuthService = userAuthService;
   }
 
   @Override
@@ -49,7 +52,7 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public User getUser(String verificationToken) {
+  public User getUserForToken(String verificationToken) {
     Optional<VerificationToken> tokenEntity = getVerificationToken(verificationToken);
     if (tokenEntity.isPresent()) {
       return tokenEntity.get().getUser();
@@ -76,6 +79,11 @@ public class UserService implements IUserService {
   @Override
   public Optional<VerificationToken> getVerificationToken(String token) {
     return accountRepository.select(VerificationToken.class, vt -> vt.getToken().equals(token));
+  }
+
+  @Override
+  public Organization getCurrentUserLoggedOrganization() {
+    return userAuthService.getCurrentUserLoggedOrganization();
   }
 
   private boolean emailExist(String email) {

@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
+import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
@@ -22,9 +23,10 @@ public class UserServiceTest extends IUserServiceTest {
 
   @Override
   protected IUserService givenUserService(IEntityRepository<AccountEntityBase> accountRepository,
-      PasswordEncoder encoder) {
+      PasswordEncoder encoder,
+      UserAuthenticationService userAuthenticationService) {
     setupMocks(accountRepository);
-    return new UserService(accountRepository, encoder);
+    return new UserService(accountRepository, encoder, userAuthenticationService);
   }
 
   private void setupMocks(IEntityRepository<AccountEntityBase> accountRepository) {

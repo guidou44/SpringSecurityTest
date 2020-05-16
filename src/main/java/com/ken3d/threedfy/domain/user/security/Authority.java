@@ -1,21 +1,26 @@
 package com.ken3d.threedfy.domain.user.security;
 
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.OrganizationGroup;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.security.core.GrantedAuthority;
 
 public class Authority implements GrantedAuthority {
 
-  private Role role;
+  private final Role role;
+  private final Organization organization;
+
   private OrganizationGroup organizationGroup = null;
 
-  public Authority(Role role) {
+  public Authority(Role role, Organization organization) {
+    this.organization = organization;
     this.role = role;
   }
 
-  public Authority(Role role, OrganizationGroup organizationGroup) {
-    this(role);
+  public Authority(Role role, OrganizationGroup organizationGroup, Organization organization) {
+    this(role, organization);
     this.organizationGroup = organizationGroup;
   }
 
@@ -32,6 +37,14 @@ public class Authority implements GrantedAuthority {
     return role.getAuthorityLevel();
   }
 
+  public Optional<OrganizationGroup> getOrganizationGroup() {
+    return Optional.ofNullable(this.organizationGroup);
+  }
+
+  public Organization getOrganization() {
+    return this.organization;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -41,7 +54,9 @@ public class Authority implements GrantedAuthority {
       return false;
     }
     Authority authority = (Authority) o;
-    return Objects.equals(role, authority.role);
+    return Objects.equals(role, authority.role)
+        && Objects.equals(organizationGroup, authority.organizationGroup)
+        && Objects.equals(organization, authority.organization);
   }
 
   @Override

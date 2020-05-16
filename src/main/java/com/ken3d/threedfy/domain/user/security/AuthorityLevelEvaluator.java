@@ -19,27 +19,31 @@ public class AuthorityLevelEvaluator extends SecurityExpressionRoot implements
   }
 
   public boolean hasAtLeastAuthorityOf(int authLevel) {
-    Optional<UserAuthDetails> authDetailsOpt = tryCast(this.getPrincipal(), UserAuthDetails.class);
+    Optional<UserAuthDetails> authDetailsOpt = SecurityContextHelper
+        .tryCast(this.getPrincipal(), UserAuthDetails.class);
 
     return authDetailsOpt
         .filter(userAuthDetails -> hasAuthorityGreaterOrEqualThan(userAuthDetails, authLevel))
         .isPresent();
   }
 
+  public boolean hasExactlyAuthorityOf(int authLevel) {
+    Optional<UserAuthDetails> authDetailsOpt = SecurityContextHelper
+        .tryCast(this.getPrincipal(), UserAuthDetails.class);
+
+    return authDetailsOpt
+        .filter(userAuthDetails -> hasAuthorityEqualTo(userAuthDetails, authLevel))
+        .isPresent();
+  }
+
+
   public boolean hasMinimumRole(String role) {
-    Optional<UserAuthDetails> authDetailsOpt = tryCast(this.getPrincipal(), UserAuthDetails.class);
+    Optional<UserAuthDetails> authDetailsOpt = SecurityContextHelper
+        .tryCast(this.getPrincipal(), UserAuthDetails.class);
 
     return authDetailsOpt
         .filter(userAuthDetails -> hasAuthority(userAuthDetails, role))
         .isPresent();
-  }
-
-  private <T> Optional<T> tryCast(Object target, Class<T> toClass) {
-    try {
-      return Optional.ofNullable(toClass.cast(target));
-    } catch (Exception e) {
-      return Optional.empty();
-    }
   }
 
 
@@ -51,6 +55,14 @@ public class AuthorityLevelEvaluator extends SecurityExpressionRoot implements
             AuthorityWithoutLevelException::new);
 
     return highestAuthority.getAuthorityLevel() >= requiredLevel;
+  }
+
+  private boolean hasAuthorityEqualTo(UserAuthDetails authentication,
+      int requiredLevel) {
+    Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+    return authorities.stream().map(Authority.class::cast)
+        .filter(a -> a.getAuthorityLevel() == requiredLevel).collect(Collectors.toList()).size()
+        > 0;
   }
 
   private boolean hasAuthority(UserAuthDetails authentication, String role) {

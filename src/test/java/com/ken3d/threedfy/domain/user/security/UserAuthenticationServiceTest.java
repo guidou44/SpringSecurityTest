@@ -47,6 +47,8 @@ public class UserAuthenticationServiceTest {
   private static final Set<Organization> ORGANIZATIONS = new HashSet<>(
       Arrays.asList(ORGANIZATION_COLLABORATIVE, ORGANIZATION_NON_COLLABORATIVE));
   private static final OrganizationGroup ORGANIZATION_GROUP = mock(OrganizationGroup.class);
+
+  private SecurityContextHelper securityContextHelper = mock(SecurityContextHelper.class);
   private IEntityRepository<AccountEntityBase> accountRepository = mock(IEntityRepository.class);
 
   @BeforeEach
@@ -77,9 +79,13 @@ public class UserAuthenticationServiceTest {
   public void givenValidUsername_whenAuthUser_thenItSucceedsWithProperUserDetails() {
     when(accountRepository.select(any(Class.class), any(Predicate.class)))
         .thenReturn(Optional.ofNullable(USER));
-    Authority managerAuthority = givenAuthority(ROLE_MANAGER);
-    Authority userAuthority = givenAuthority(ROLE_USER);
-    UserAuthenticationService authService = new UserAuthenticationService(accountRepository);
+    willReturn(new HashSet<>(Collections.singletonList(ORGANIZATION_NON_COLLABORATIVE))).given(USER)
+        .getOrganizations();
+
+    Authority managerAuthority = givenAuthority(ROLE_MANAGER, ORGANIZATION_NON_COLLABORATIVE);
+    Authority userAuthority = givenAuthority(ROLE_USER, ORGANIZATION_NON_COLLABORATIVE);
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
 
     UserDetails userDetails = authService.loadUserByUsername(USERNAME);
 
@@ -95,7 +101,8 @@ public class UserAuthenticationServiceTest {
   public void givenInvalidUsername_whenAuthUser_thenItThrowsProperException() {
     when(accountRepository.select(any(Class.class), any(Predicate.class)))
         .thenReturn(Optional.empty());
-    UserAuthenticationService authService = new UserAuthenticationService(accountRepository);
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
 
     assertThrows(UsernameNotFoundException.class,
         () -> authService.loadUserByUsername(NOT_USERNAME));
@@ -108,14 +115,15 @@ public class UserAuthenticationServiceTest {
     willReturn(new HashSet<>(Collections.singletonList(ORGANIZATION_NON_COLLABORATIVE))).given(USER)
         .getOrganizations();
 
-    Authority managerAuthority = givenAuthority(ROLE_MANAGER);
-    Authority userAuthority = givenAuthority(ROLE_USER);
-    UserAuthenticationService authService = new UserAuthenticationService(accountRepository);
+    Authority managerAuthority = givenAuthority(ROLE_MANAGER, ORGANIZATION_NON_COLLABORATIVE);
+    Authority userAuthority = givenAuthority(ROLE_USER, ORGANIZATION_NON_COLLABORATIVE);
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
 
     UserDetails userDetails = authService.loadUserByUsername(USERNAME);
     List<Authority> authorities =
-        userDetails.getAuthorities().stream().map(a -> (Authority) a).collect(
-            Collectors.toList());
+        userDetails.getAuthorities().stream().map(Authority.class::cast)
+            .collect(Collectors.toList());
     Authority highestAuth = Collections
         .max(authorities, Comparator.comparing(Authority::getAuthorityLevel));
 
@@ -133,14 +141,17 @@ public class UserAuthenticationServiceTest {
     when(accountRepository.select(any(Class.class), any(Predicate.class)))
         .thenReturn(Optional.ofNullable(USER));
 
-    Authority managerAuthority = givenAuthority(ROLE_MANAGER, ORGANIZATION_GROUP);
-    Authority userAuthority = givenAuthority(ROLE_USER, ORGANIZATION_GROUP);
-    UserAuthenticationService authService = new UserAuthenticationService(accountRepository);
+    Authority managerAuthority = givenAuthority(ROLE_MANAGER, ORGANIZATION_GROUP,
+        ORGANIZATION_COLLABORATIVE);
+    Authority userAuthority = givenAuthority(ROLE_USER, ORGANIZATION_GROUP,
+        ORGANIZATION_COLLABORATIVE);
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
 
     UserDetails userDetails = authService.loadUserByUsername(USERNAME);
     List<Authority> authorities =
-        userDetails.getAuthorities().stream().map(a -> (Authority) a).collect(
-            Collectors.toList());
+        userDetails.getAuthorities().stream().map(Authority.class::cast)
+            .collect(Collectors.toList());
     Authority highestAuth = Collections
         .max(authorities, Comparator.comparing(Authority::getAuthorityLevel));
 
@@ -153,11 +164,11 @@ public class UserAuthenticationServiceTest {
     assertThat(highestAuth.getAuthorityLevel()).isEqualTo(ORG_GROUP_AUTH_LEVEL);
   }
 
-  private Authority givenAuthority(Role role) {
-    return new Authority(role);
+  private Authority givenAuthority(Role role, Organization org) {
+    return new Authority(role, org);
   }
 
-  private Authority givenAuthority(Role role, OrganizationGroup orgGroup) {
-    return new Authority(role, orgGroup);
+  private Authority givenAuthority(Role role, OrganizationGroup orgGroup, Organization org) {
+    return new Authority(role, orgGroup, org);
   }
 }

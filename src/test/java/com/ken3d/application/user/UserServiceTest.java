@@ -1,8 +1,9 @@
-package com.ken3d.threedfy.domain.user;
+package com.ken3d.application.user;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
+import com.ken3d.threedfy.application.user.UserService;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;

@@ -25,6 +25,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -45,8 +48,8 @@ public class UserAuthenticationServiceTest {
   private static final Set<Role> ROLES = new HashSet<>(Arrays.asList(ROLE_MANAGER, ROLE_USER));
   private static final Organization ORGANIZATION_COLLABORATIVE = mock(Organization.class);
   private static final Organization ORGANIZATION_NON_COLLABORATIVE = mock(Organization.class);
-  private static final Set<Organization> ORGANIZATIONS = new HashSet<>(
-      Arrays.asList(ORGANIZATION_COLLABORATIVE, ORGANIZATION_NON_COLLABORATIVE));
+  private static final Set<Organization> ORGANIZATIONS_OWNED =
+      new HashSet<>(Collections.singletonList(ORGANIZATION_NON_COLLABORATIVE));
   private static final OrganizationGroup ORGANIZATION_GROUP = mock(OrganizationGroup.class);
 
   private SecurityContextHelper securityContextHelper = mock(SecurityContextHelper.class);
@@ -62,7 +65,7 @@ public class UserAuthenticationServiceTest {
     willReturn(MANAGER_AUTH_LEVEL).given(ROLE_MANAGER).getAuthorityLevel();
     willReturn(USER_AUTH_LEVEL).given(ROLE_USER).getAuthorityLevel();
 
-    willReturn(ORGANIZATIONS).given(USER).getOrganizations();
+    willReturn(ORGANIZATIONS_OWNED).given(USER).getOrganizations();
     willReturn(2).given(OTHER_USER).getId();
     willReturn(1).given(USER).getId();
     willReturn(ORGANIZATION_COLLABORATIVE).given(ORGANIZATION_GROUP).getOrganization();
@@ -80,8 +83,7 @@ public class UserAuthenticationServiceTest {
   public void givenValidUsername_whenAuthUser_thenItSucceedsWithProperUserDetails() {
     when(accountRepository.select(any(Class.class), any(Predicate.class)))
         .thenReturn(Optional.ofNullable(USER));
-    willReturn(new HashSet<>(Collections.singletonList(ORGANIZATION_NON_COLLABORATIVE))).given(USER)
-        .getOrganizations();
+    willReturn(new HashSet<>(Collections.emptyList())).given(USER).getOrganizationGroups();
 
     Authority managerAuthority = givenAuthority(ROLE_MANAGER, ORGANIZATION_NON_COLLABORATIVE);
     Authority userAuthority = givenAuthority(ROLE_USER, ORGANIZATION_NON_COLLABORATIVE);
@@ -113,8 +115,7 @@ public class UserAuthenticationServiceTest {
   public void givenUserWithNoCollaborativeOrg_whenLoadUser_thenItLoadUserWithGlobalAuthority() {
     when(accountRepository.select(any(Class.class), any(Predicate.class)))
         .thenReturn(Optional.ofNullable(USER));
-    willReturn(new HashSet<>(Collections.singletonList(ORGANIZATION_NON_COLLABORATIVE))).given(USER)
-        .getOrganizations();
+    willReturn(new HashSet<>(Collections.emptyList())).given(USER).getOrganizationGroups();
 
     Authority managerAuthority = givenAuthority(ROLE_MANAGER, ORGANIZATION_NON_COLLABORATIVE);
     Authority userAuthority = givenAuthority(ROLE_USER, ORGANIZATION_NON_COLLABORATIVE);
@@ -233,5 +234,87 @@ public class UserAuthenticationServiceTest {
 
     assertThrows(CannotLoadSecurityContextException.class,
         authService::getCurrentUser);
+  }
+
+  @Test
+  public void givenValidOrganization_whenUpdateOrganization_thenItUpdatesCurrentOrgProper() {
+    Authentication authentication = mock(Authentication.class);
+    UserAuthDetails authDetails = mock(UserAuthDetails.class);
+    willReturn(ORGANIZATION_COLLABORATIVE).given(authDetails).getLoggedOrganization();
+    willReturn(authDetails).given(authentication).getPrincipal();
+    willReturn(USER).given(authDetails).getCurrentUser();
+    SecurityContextHelper contextHelper = new SecurityContextHelper();
+    SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        contextHelper);
+
+    authService.setCurrentOrganization(ORGANIZATION_NON_COLLABORATIVE);
+    Organization currentlyLoggedOrg = authService.getCurrentUserLoggedOrganization();
+
+    assertThat(currentlyLoggedOrg).isEqualTo(ORGANIZATION_NON_COLLABORATIVE);
+  }
+
+  @Test
+  public void givenOrganizationNotOwned_whenUpdateOrganization_thenItUpdatesAuthorityWithOrgGroup() {
+    Authentication authentication = mock(Authentication.class);
+    UserAuthDetails authDetails = mock(UserAuthDetails.class);
+    willReturn(ORGANIZATION_NON_COLLABORATIVE).given(authDetails).getLoggedOrganization();
+    willReturn(authDetails).given(authentication).getPrincipal();
+    willReturn(USER).given(authDetails).getCurrentUser();
+    SecurityContextHelper contextHelper = new SecurityContextHelper();
+    SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        contextHelper);
+
+    authService.setCurrentOrganization(ORGANIZATION_COLLABORATIVE);
+    Organization currentlyLoggedOrg = authService.getCurrentUserLoggedOrganization();
+    Optional<UserAuthDetails> userDetails = contextHelper.getCurrentContextAuthDetails();
+
+    assertThat(userDetails.isPresent()).isTrue();
+    List<Authority> authorities =
+        userDetails.get().getAuthorities().stream().map(Authority.class::cast)
+            .collect(Collectors.toList());
+    Authority highestAuth = Collections
+        .max(authorities, Comparator.comparing(Authority::getAuthorityLevel));
+
+    assertThat(currentlyLoggedOrg).isEqualTo(ORGANIZATION_COLLABORATIVE);
+    assertThat(highestAuth.getAuthorityLevel()).isEqualTo(ORG_GROUP_AUTH_LEVEL);
+  }
+
+  @Test
+  public void givenOrganizationOwned_whenUpdateOrganization_thenItAuthorityDoNotChange() {
+    Authentication authentication = mock(Authentication.class);
+    UserAuthDetails authDetails = mock(UserAuthDetails.class);
+    willReturn(ORGANIZATION_COLLABORATIVE).given(authDetails).getLoggedOrganization();
+    willReturn(authDetails).given(authentication).getPrincipal();
+    willReturn(USER).given(authDetails).getCurrentUser();
+    SecurityContextHelper contextHelper = new SecurityContextHelper();
+    SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        contextHelper);
+
+    authService.setCurrentOrganization(ORGANIZATION_NON_COLLABORATIVE);
+    Organization currentlyLoggedOrg = authService.getCurrentUserLoggedOrganization();
+    Optional<UserAuthDetails> userDetails = contextHelper.getCurrentContextAuthDetails();
+
+    assertThat(userDetails.isPresent()).isTrue();
+    List<Authority> authorities =
+        userDetails.get().getAuthorities().stream().map(Authority.class::cast)
+            .collect(Collectors.toList());
+    Authority highestAuth = Collections
+        .max(authorities, Comparator.comparing(Authority::getAuthorityLevel));
+
+    assertThat(currentlyLoggedOrg).isEqualTo(ORGANIZATION_NON_COLLABORATIVE);
+    assertThat(highestAuth.getAuthorityLevel()).isEqualTo(MANAGER_AUTH_LEVEL);
+  }
+
+  @Test
+  public void givenInvalidOrganization_whenUpdateOrganization_thenItUThrowsProperException() {
+    willReturn(Optional.empty()).given(securityContextHelper).getCurrentContextAuthDetails();
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
+
+    assertThrows(CannotLoadSecurityContextException.class,
+        () -> authService.setCurrentOrganization(ORGANIZATION_NON_COLLABORATIVE));
   }
 }

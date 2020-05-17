@@ -21,4 +21,5 @@ public interface IUserService {
 
   User getCurrentUser();
 
+  void updateCurrentOrganization(Organization organization);
 }

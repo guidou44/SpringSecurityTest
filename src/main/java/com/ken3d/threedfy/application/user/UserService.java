@@ -1,5 +1,6 @@
-package com.ken3d.threedfy.domain.user;
+package com.ken3d.threedfy.application.user;
 
+import com.ken3d.threedfy.application.user.exception.NonExistingOrganizationException;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
 import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
@@ -46,7 +47,7 @@ public class UserService implements IUserService {
     setBasicUserRole(user);
     user = accountRepository.create(user);
 
-    createNewOrganization(user);
+    createNewDefaultOrganization(user);
 
     return user;
   }
@@ -91,6 +92,19 @@ public class UserService implements IUserService {
     return userAuthService.getCurrentUser();
   }
 
+  @Override
+  public void updateCurrentOrganization(Organization organization) {
+    Optional<Organization> orgWithReference =
+        accountRepository.select(Organization.class, organization.getId());
+
+    if (orgWithReference.isPresent()) {
+      userAuthService.setCurrentOrganization(orgWithReference.get());
+      return;
+    }
+
+    throw new NonExistingOrganizationException();
+  }
+
   private boolean emailExist(String email) {
     return accountRepository.selectAll(User.class, u -> u.getEmail().equals(email)).size() > 0;
   }
@@ -116,7 +130,7 @@ public class UserService implements IUserService {
     userRole.ifPresent(role -> user.setRoles(new HashSet<>(Collections.singletonList(role))));
   }
 
-  private void createNewOrganization(User owner) {
+  private void createNewDefaultOrganization(User owner) {
     Organization organization = new Organization();
     organization.setCollaborative(false);
     organization.setName(owner.getUsername());

@@ -106,9 +106,10 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public Organization createOrganizationForUser(Organization organization) {
+  public void createOrganizationForUserAndSetCurrent(Organization organization) {
     organization.setOwner(getCurrentUser());
-    return accountRepository.create(organization);
+    organization = accountRepository.create(organization);
+    updateCurrentOrganization(organization);
   }
 
   private boolean emailExist(String email) {

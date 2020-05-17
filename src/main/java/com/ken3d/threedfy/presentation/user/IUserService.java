@@ -23,5 +23,5 @@ public interface IUserService {
 
   void updateCurrentOrganization(Organization organization);
 
-  Organization createOrganizationForUser(Organization organization);
+  void createOrganizationForUserAndSetCurrent(Organization organization);
 }

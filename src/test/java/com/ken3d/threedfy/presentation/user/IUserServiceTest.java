@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoInteractions;
 
 import com.ken3d.threedfy.application.user.exception.NonExistingOrganizationException;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
@@ -271,7 +270,7 @@ public abstract class IUserServiceTest {
     IUserService userService =
         givenUserService(accountRepository, encoder, userAuthenticationService);
 
-    userService.createOrganizationForUser(newOrg);
+    userService.createOrganizationForUserAndSetCurrent(newOrg);
 
     assertThat(newOrg.getId()).isNotEqualTo(forcedOrgId);
     assertThat(newOrg.getOwner()).isEqualTo(USER);
@@ -281,11 +280,12 @@ public abstract class IUserServiceTest {
   public void givenNewOrganization_whenCreatingOrganization_itUpdatesCurrentOrganization() {
     final int forcedOrgId = 3;
     Organization newOrg = givenNewOrganization(forcedOrgId);
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
 
-    IUserService userService =
-        givenUserService(accountRepository, encoder, userAuthenticationService);
-
-    userService.createOrganizationForUser(newOrg);
+    userService.createOrganizationForUserAndSetCurrent(newOrg);
+    willReturn(Optional.ofNullable(newOrg)).given(accountRepository)
+        .select(Organization.class, newOrg.getId());
     Organization org = userService.getCurrentUserLoggedOrganization();
 
     assertThat(org).isEqualTo(newOrg);

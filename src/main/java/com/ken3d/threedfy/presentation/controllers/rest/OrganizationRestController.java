@@ -70,7 +70,6 @@ public class OrganizationRestController {
   @ResponseStatus(HttpStatus.CREATED)
   public void createNewOrganizationAndMakeCurrent(@RequestBody OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
-    organization = userService.createOrganizationForUser(organization);
-    userService.updateCurrentOrganization(organization);
+    userService.createOrganizationForUserAndSetCurrent(organization);
   }
 }

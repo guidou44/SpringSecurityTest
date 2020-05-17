@@ -1,4 +1,4 @@
-package com.ken3d.threedfy.presentation.controllers;
+package com.ken3d.threedfy.presentation.controllers.rest;
 
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.OrganizationGroup;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @PreAuthorize("hasAtLeastAuthorityOf(0)")
-public class OrganizationController {
+public class OrganizationRestController {
 
   private final IUserService userService;
   private final DtoMapper mapper;
 
   @Autowired
-  public OrganizationController(IUserService userService,
+  public OrganizationRestController(IUserService userService,
       DtoMapper mapper) {
     this.userService = userService;
     this.mapper = mapper;
@@ -50,28 +51,26 @@ public class OrganizationController {
   private List<OrganizationDto> concatOwnedAndNotOwnedOrganizations(User user) {
     List<Organization> notOwnedOrg = user.getOrganizationGroups().stream()
         .map(OrganizationGroup::getOrganization).collect(Collectors.toList());
-    List<OrganizationDto> allOrganizationsDto = new ArrayList<>();
+    List<Organization> allOrganizations = new ArrayList<>(user.getOrganizations());
+    allOrganizations.addAll(notOwnedOrg);
 
-    user.getOrganizations().stream()
+    return allOrganizations.stream()
         .map(o -> mapper.map(o, OrganizationDto.class))
-        .map(allOrganizationsDto::add);
-    notOwnedOrg.stream()
-        .map(o -> mapper.map(o, OrganizationDto.class))
-        .map(allOrganizationsDto::add);
-
-    return allOrganizationsDto;
+        .collect(Collectors.toList());
   }
 
   @RequestMapping(value = "/organization", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.OK)
-  public void updateCurrentOrganization(OrganizationDto orgDto) {
+  public void updateCurrentOrganization(@RequestBody OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
     userService.updateCurrentOrganization(organization);
   }
 
   @RequestMapping(value = "/organization", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  public void createNewOrganizationAndMakeCurrent(OrganizationDto orgDto) {
-
+  public void createNewOrganizationAndMakeCurrent(@RequestBody OrganizationDto orgDto) {
+    Organization organization = mapper.map(orgDto, Organization.class);
+    organization = userService.createOrganizationForUser(organization);
+    userService.updateCurrentOrganization(organization);
   }
 }

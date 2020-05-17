@@ -105,6 +105,12 @@ public class UserService implements IUserService {
     throw new NonExistingOrganizationException();
   }
 
+  @Override
+  public Organization createOrganizationForUser(Organization organization) {
+    organization.setOwner(getCurrentUser());
+    return accountRepository.create(organization);
+  }
+
   private boolean emailExist(String email) {
     return accountRepository.selectAll(User.class, u -> u.getEmail().equals(email)).size() > 0;
   }

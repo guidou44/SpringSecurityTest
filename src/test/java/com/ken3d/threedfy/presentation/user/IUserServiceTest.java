@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import com.ken3d.threedfy.application.user.exception.NonExistingOrganizationException;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
@@ -49,6 +50,7 @@ public abstract class IUserServiceTest {
     userAuthenticationService = mock(UserAuthenticationService.class);
 
     willReturn(ORGANIZATION).given(userAuthenticationService).getCurrentUserLoggedOrganization();
+    willReturn(USER).given(userAuthenticationService).getCurrentUser();
     willReturn(55).given(ORGANIZATION).getId();
     willReturn(44).given(OTHER_ORGANIZATION).getId();
     willReturn(Optional.ofNullable(ORGANIZATION)).given(accountRepository)
@@ -57,10 +59,11 @@ public abstract class IUserServiceTest {
         .select(Organization.class, 44);
 
     doAnswer(invocation -> {
-      willReturn(OTHER_ORGANIZATION).given(userAuthenticationService)
+      Organization newOrg = (Organization) invocation.getArgument(0);
+      willReturn(newOrg).given(userAuthenticationService)
           .getCurrentUserLoggedOrganization();
       return null;
-    }).when(userAuthenticationService).setCurrentOrganization(OTHER_ORGANIZATION);
+    }).when(userAuthenticationService).setCurrentOrganization(any(Organization.class));
   }
 
   @Test
@@ -230,7 +233,6 @@ public abstract class IUserServiceTest {
 
   @Test
   public void givenUserAuthService_whenGetCurrentUser_thenItReturnsProperUser() {
-    willReturn(USER).given(userAuthenticationService).getCurrentUser();
     IUserService userService = givenUserService(accountRepository, encoder,
         userAuthenticationService);
 
@@ -253,12 +255,48 @@ public abstract class IUserServiceTest {
   @Test
   public void givenNonExistingNewOrganization_whenUpdateCurrentOrganization_thenIThrowsProperEx() {
     willReturn(Optional.empty()).given(accountRepository).select(Organization.class, 44);
-    IUserService userService = givenUserService(accountRepository, encoder,
-        userAuthenticationService);
+    IUserService userService =
+        givenUserService(accountRepository, encoder, userAuthenticationService);
 
     assertThrows(NonExistingOrganizationException.class,
         () -> userService.updateCurrentOrganization(OTHER_ORGANIZATION));
 
+  }
+
+  @Test
+  public void givenNewOrganization_whenCreatingOrganization_itCreatesOrg() {
+    final int forcedOrgId = 3;
+    Organization newOrg = givenNewOrganization(forcedOrgId);
+
+    IUserService userService =
+        givenUserService(accountRepository, encoder, userAuthenticationService);
+
+    userService.createOrganizationForUser(newOrg);
+
+    assertThat(newOrg.getId()).isNotEqualTo(forcedOrgId);
+    assertThat(newOrg.getOwner()).isEqualTo(USER);
+  }
+
+  @Test
+  public void givenNewOrganization_whenCreatingOrganization_itUpdatesCurrentOrganization() {
+    final int forcedOrgId = 3;
+    Organization newOrg = givenNewOrganization(forcedOrgId);
+
+    IUserService userService =
+        givenUserService(accountRepository, encoder, userAuthenticationService);
+
+    userService.createOrganizationForUser(newOrg);
+    Organization org = userService.getCurrentUserLoggedOrganization();
+
+    assertThat(org).isEqualTo(newOrg);
+  }
+
+  private Organization givenNewOrganization(int setId) {
+    Organization newOrg = new Organization();
+    newOrg.setId(setId);
+    newOrg.setName("KEN3D_TEST");
+    newOrg.setCollaborative(true);
+    return newOrg;
   }
 
   private UserDto givenUserDto() {

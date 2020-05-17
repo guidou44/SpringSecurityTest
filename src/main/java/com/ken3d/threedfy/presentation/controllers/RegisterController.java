@@ -131,6 +131,11 @@ public class RegisterController {
     return "redirect:/login";
   }
 
+  @GetMapping("/confirm-email")
+  public String getConfirmEmail() {
+    return "confirm-email";
+  }
+
   private boolean isTokenExpired(VerificationToken verificationToken) {
     Calendar cal = Calendar.getInstance();
     return (verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0;

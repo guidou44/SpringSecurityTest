@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(
@@ -31,5 +32,24 @@ public class PingControllerTest {
         .perform(MockMvcRequestBuilders.get("/ping"))
         .andExpect(status().isOk())
         .andExpect(view().name("index"));
+  }
+
+  @Test
+  public void givenPingController_whenInternalServerError_thenItReturnsProperView()
+      throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/internalservererror"))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isInternalServerError())
+        .andExpect(view().name("error"));
+  }
+
+  @Test
+  public void givenPingController_whenBadRequest_thenItReturnsProperView() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/badrequesterror"))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isBadRequest())
+        .andExpect(view().name("error"));
   }
 }

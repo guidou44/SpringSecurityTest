@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
+import com.ken3d.threedfy.domain.user.exceptions.CannotLoadSecurityContextException;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.OrganizationGroup;
@@ -170,5 +171,67 @@ public class UserAuthenticationServiceTest {
 
   private Authority givenAuthority(Role role, OrganizationGroup orgGroup, Organization org) {
     return new Authority(role, orgGroup, org);
+  }
+
+  @Test
+  public void givenUserWithNoCollaborativeOrg_whenGetLoggedOrg_thenItReturnsUserDefaultOrg() {
+    UserAuthDetails authDetails = mock(UserAuthDetails.class);
+    willReturn(ORGANIZATION_NON_COLLABORATIVE).given(authDetails).getLoggedOrganization();
+    willReturn(Optional.ofNullable(authDetails)).given(securityContextHelper)
+        .getCurrentContextAuthDetails();
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
+
+    Organization currentlyLoggedOrg = authService.getCurrentUserLoggedOrganization();
+
+    assertThat(currentlyLoggedOrg).isEqualTo(ORGANIZATION_NON_COLLABORATIVE);
+  }
+
+  @Test
+  public void givenUserWithCollaborativeOrg_whenGetLoggedOrg_thenItReturnsProperOrg() {
+    UserAuthDetails authDetails = mock(UserAuthDetails.class);
+    willReturn(ORGANIZATION_COLLABORATIVE).given(authDetails).getLoggedOrganization();
+    willReturn(Optional.ofNullable(authDetails)).given(securityContextHelper)
+        .getCurrentContextAuthDetails();
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
+
+    Organization currentlyLoggedOrg = authService.getCurrentUserLoggedOrganization();
+
+    assertThat(currentlyLoggedOrg).isEqualTo(ORGANIZATION_COLLABORATIVE);
+  }
+
+  @Test
+  public void givenNoUserAuthDetails_whenGetLoggedOrg_thenItThrowsProperException() {
+    willReturn(Optional.empty()).given(securityContextHelper).getCurrentContextAuthDetails();
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
+
+    assertThrows(CannotLoadSecurityContextException.class,
+        authService::getCurrentUserLoggedOrganization);
+  }
+
+  @Test
+  public void givenLoggedUser_whenGetCurrentUser_thenItReturnsCurrentUser() {
+    UserAuthDetails authDetails = mock(UserAuthDetails.class);
+    willReturn(USER).given(authDetails).getCurrentUser();
+    willReturn(Optional.ofNullable(authDetails)).given(securityContextHelper)
+        .getCurrentContextAuthDetails();
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
+
+    User currentUser = authService.getCurrentUser();
+
+    assertThat(currentUser).isEqualTo(USER);
+  }
+
+  @Test
+  public void givenNoUserAuthDetails_whenGetCurrentUser_thenItThrowsProperException() {
+    willReturn(Optional.empty()).given(securityContextHelper).getCurrentContextAuthDetails();
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        securityContextHelper);
+
+    assertThrows(CannotLoadSecurityContextException.class,
+        authService::getCurrentUser);
   }
 }

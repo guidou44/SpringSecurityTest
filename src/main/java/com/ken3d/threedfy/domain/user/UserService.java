@@ -86,6 +86,11 @@ public class UserService implements IUserService {
     return userAuthService.getCurrentUserLoggedOrganization();
   }
 
+  @Override
+  public User getCurrentUser() {
+    return userAuthService.getCurrentUser();
+  }
+
   private boolean emailExist(String email) {
     return accountRepository.selectAll(User.class, u -> u.getEmail().equals(email)).size() > 0;
   }

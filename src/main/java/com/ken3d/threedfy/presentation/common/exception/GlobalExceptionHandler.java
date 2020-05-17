@@ -12,12 +12,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class GlobalExceptionHandler {
 
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ExceptionHandler({Exception.class})
+  @ExceptionHandler( {Exception.class})
   public ModelAndView exception(Exception exception) {
     ModelAndView mav = new ModelAndView("error");
     mav.addObject("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
     mav.addObject("title", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-    mav.addObject("message", exception.getMessage());
+    mav.addObject("message", exception.getClass().getName() + "\n"
+        + exception.getMessage());
     return mav;
   }
 }

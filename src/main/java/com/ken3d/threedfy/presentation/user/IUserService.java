@@ -19,4 +19,6 @@ public interface IUserService {
 
   Organization getCurrentUserLoggedOrganization();
 
+  User getCurrentUser();
+
 }

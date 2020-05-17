@@ -9,7 +9,6 @@ import static org.mockito.Mockito.mock;
 
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
-import com.ken3d.threedfy.domain.user.security.SecurityContextHelper;
 import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
@@ -32,6 +31,9 @@ public abstract class IUserServiceTest {
   private static final String SECOND_EMAIL_ADDRESS = "22@22.com";
   private static final String FIRST_USERNAME = "test123";
   private static final String SECOND_USERNAME = "somethingElse";
+  private static final Organization ORGANIZATION = mock(Organization.class);
+  private static final User USER = mock(User.class);
+
   protected List<User> mockUserTable = new ArrayList<>();
   protected List<VerificationToken> mockTokenTable = new ArrayList<>();
   private IEntityRepository<AccountEntityBase> accountRepository;
@@ -43,6 +45,8 @@ public abstract class IUserServiceTest {
     encoder = new BCryptPasswordEncoder();
     accountRepository = mock(IEntityRepository.class);
     userAuthenticationService = mock(UserAuthenticationService.class);
+
+    willReturn(ORGANIZATION).given(userAuthenticationService).getCurrentUserLoggedOrganization();
   }
 
   @Test
@@ -198,6 +202,27 @@ public abstract class IUserServiceTest {
     userService.createVerificationToken(registeredUser.get(), token);
 
     assertThrows(InvalidVerificationTokenException.class, () -> userService.getUserForToken(token));
+  }
+
+  @Test
+  public void givenUserAuthService_whenGetLoggedOrg_thenItReturnsProperOrg() {
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
+
+    Organization org = userService.getCurrentUserLoggedOrganization();
+
+    assertThat(org).isEqualTo(ORGANIZATION);
+  }
+
+  @Test
+  public void givenUserAuthService_whenGetCurrentUser_thenItReturnsProperUser() {
+    willReturn(USER).given(userAuthenticationService).getCurrentUser();
+    IUserService userService = givenUserService(accountRepository, encoder,
+        userAuthenticationService);
+
+    User user = userService.getCurrentUser();
+
+    assertThat(user).isEqualTo(USER);
   }
 
   private UserDto givenUserDto() {

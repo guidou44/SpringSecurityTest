@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -61,8 +60,7 @@ public class UserAuthenticationService implements UserDetailsService {
   private UserDetails buildUserDetails(User user) {
     Collection<Authority> authorities = buildAuthorities(user);
 
-    return new UserAuthDetails(user.getUsername(), user.getPasswordHash(), user.isEnabled(),
-        authorities);
+    return new UserAuthDetails(user, authorities);
   }
 
   private Collection<Authority> buildAuthorities(User user) {
@@ -135,6 +133,14 @@ public class UserAuthenticationService implements UserDetailsService {
     Optional<UserAuthDetails> userDetails = securityContext.getCurrentContextAuthDetails();
     if (userDetails.isPresent()) {
       return userDetails.get().getLoggedOrganization();
+    }
+    throw new CannotLoadSecurityContextException();
+  }
+
+  public User getCurrentUser() {
+    Optional<UserAuthDetails> userDetails = securityContext.getCurrentContextAuthDetails();
+    if (userDetails.isPresent()) {
+      return userDetails.get().getCurrentUser();
     }
     throw new CannotLoadSecurityContextException();
   }

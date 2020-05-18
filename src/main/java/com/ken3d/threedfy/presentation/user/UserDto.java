@@ -1,5 +1,6 @@
 package com.ken3d.threedfy.presentation.user;
 
+import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.presentation.common.email.ValidEmail;
 import com.ken3d.threedfy.presentation.common.password.PasswordMatches;
 import javax.validation.constraints.NotEmpty;

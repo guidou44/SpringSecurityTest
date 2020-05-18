@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class MainController {
+public class DashboardController {
 
   @GetMapping("/")
   public String getMainPage() {
@@ -18,15 +18,9 @@ public class MainController {
     return "dashboard";
   }
 
-
   @GetMapping("/error")
   public String getError() {
     return "error";
-  }
-
-  @GetMapping("/confirm-email")
-  public String getConfirmEmail() {
-    return "confirm-email";
   }
 }
 

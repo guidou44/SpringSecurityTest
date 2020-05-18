@@ -75,6 +75,9 @@
 		<!-- JFixture version -->
 		<jfixture.version>2.7.2</jfixture.version>
 
+		<!-- model mapper version-->
+		<model-mapper-version>2.3.0</model-mapper-version>
+
 	</properties>
 
 	<dependencies>

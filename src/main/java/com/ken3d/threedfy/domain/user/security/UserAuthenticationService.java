@@ -75,7 +75,7 @@ public class UserAuthenticationService implements UserDetailsService {
 
     if (allCollaborativeNotOwnedOrg.size() == defaultNumberOfCollaborationOrg) {
       Organization defaultCollaborativeOrg = allCollaborativeNotOwnedOrg.get(0);
-      OrganizationGroup highestGroup = getHighestOrgGroupForDefaultOrg(user,
+      OrganizationGroup highestGroup = getHighestOrgGroupForCollaborativeOrg(user,
           defaultCollaborativeOrg);
       authorities = buildAuthorities_internal(user.getRoles(), highestGroup,
           defaultCollaborativeOrg);
@@ -111,15 +111,16 @@ public class UserAuthenticationService implements UserDetailsService {
     throw new UserWithoutDefaultOrganizationException();
   }
 
-  private OrganizationGroup getHighestOrgGroupForDefaultOrg(User user, Organization defaultOrg) {
-    List<OrganizationGroup> userGroupsInDefaultOrg =
+  private OrganizationGroup getHighestOrgGroupForCollaborativeOrg(User user,
+      Organization defaultOrg) {
+    List<OrganizationGroup> userGroupsInOrg =
         user.getOrganizationGroups()
             .stream()
             .filter(og -> og.getOrganization().equals(defaultOrg))
             .collect(Collectors.toList());
 
     return Collections
-        .max(userGroupsInDefaultOrg, Comparator.comparing(OrganizationGroup::getAuthorityLevel));
+        .max(userGroupsInOrg, Comparator.comparing(OrganizationGroup::getHighestAuthorityLevel));
   }
 
   private Collection<Authority> buildAuthorities_internal(Collection<Role> roles,
@@ -181,7 +182,7 @@ public class UserAuthenticationService implements UserDetailsService {
     if (ownedOrg.contains(organizationToSet)) {
       return buildAuthorities_internal(currentUser.getRoles(), organizationToSet);
     } else if (notOwnedOrg.contains(organizationToSet)) {
-      OrganizationGroup highestGroup = getHighestOrgGroupForDefaultOrg(currentUser,
+      OrganizationGroup highestGroup = getHighestOrgGroupForCollaborativeOrg(currentUser,
           organizationToSet);
       return buildAuthorities_internal(currentUser.getRoles(), highestGroup, organizationToSet);
     }

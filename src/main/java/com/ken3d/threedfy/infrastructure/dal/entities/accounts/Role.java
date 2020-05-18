@@ -33,6 +33,9 @@ public class Role extends AccountEntityBase {
   @ManyToMany(mappedBy = "roles")
   private Set<User> users = new HashSet<>();
 
+  @ManyToMany(mappedBy = "roles")
+  private Set<OrganizationGroup> organizationGroups = new HashSet<>();
+
   @Column(name = "Authority_Level", nullable = false)
   @ColumnDefault("-1")
   private int authorityLevel;
@@ -91,5 +94,14 @@ public class Role extends AccountEntityBase {
         && Objects.equals(name, role.name)
         && Objects.equals(description, role.description)
         && Objects.equals(users, role.users);
+  }
+
+  public Set<OrganizationGroup> getOrganizationGroups() {
+    return organizationGroups;
+  }
+
+  public void setOrganizationGroups(
+      Set<OrganizationGroup> organizationGroups) {
+    this.organizationGroups = organizationGroups;
   }
 }

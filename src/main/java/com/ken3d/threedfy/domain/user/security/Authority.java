@@ -26,13 +26,18 @@ public class Authority implements GrantedAuthority {
 
   @Override
   public String getAuthority() {
+
+    if (organizationGroup != null) {
+      return organizationGroup.getHighestRole().getName();
+    }
     return role.getName();
   }
 
   public int getAuthorityLevel() {
 
     if (organizationGroup != null) {
-      return organizationGroup.getAuthorityLevel();
+
+      return organizationGroup.getHighestAuthorityLevel();
     }
     return role.getAuthorityLevel();
   }

@@ -1,5 +1,6 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
+import com.ken3d.threedfy.infrastructure.dal.entities.printers.PrinterCluster;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -34,6 +35,9 @@ public class Organization extends AccountEntityBase {
 
   @OneToMany(mappedBy = "organization")
   private Set<OrganizationGroup> organizationGroups = new HashSet<>();
+
+  @OneToMany(mappedBy = "organization")
+  private Set<PrinterCluster> printerClusters = new HashSet<>();
 
   public String getName() {
     return name;
@@ -89,5 +93,14 @@ public class Organization extends AccountEntityBase {
         && Objects.equals(name, that.name)
         && Objects.equals(owner, that.owner)
         && Objects.equals(organizationGroups, that.organizationGroups);
+  }
+
+  public Set<PrinterCluster> getPrinterClusters() {
+    return printerClusters;
+  }
+
+  public void setPrinterClusters(
+      Set<PrinterCluster> printerClusters) {
+    this.printerClusters = printerClusters;
   }
 }

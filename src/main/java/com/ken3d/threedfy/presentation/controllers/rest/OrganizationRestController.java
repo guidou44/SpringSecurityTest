@@ -9,6 +9,7 @@ import com.ken3d.threedfy.presentation.user.OrganizationDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,14 +62,14 @@ public class OrganizationRestController {
 
   @RequestMapping(value = "/organization", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.OK)
-  public void updateCurrentOrganization(@RequestBody OrganizationDto orgDto) {
+  public void updateCurrentOrganization(@RequestBody @Valid OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
     userService.updateCurrentOrganization(organization);
   }
 
   @RequestMapping(value = "/organization", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  public void createNewOrganizationAndMakeCurrent(@RequestBody OrganizationDto orgDto) {
+  public void createNewOrganizationAndMakeCurrent(@RequestBody @Valid OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
     userService.createOrganizationForUserAndSetCurrent(organization);
   }

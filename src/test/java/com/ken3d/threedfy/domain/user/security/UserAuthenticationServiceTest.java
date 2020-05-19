@@ -41,9 +41,11 @@ public class UserAuthenticationServiceTest {
   private static final String PASSWORD = "pSSword";
   private static final String ROLE_MANAGER_NAME = "MANAGER";
   private static final String ROLE_USER_NAME = "USER";
+  private static final String ROLE_IN_ORG_GROUP_NAME = "ADVANCED_USER";
   private static final User USER = mock(User.class);
   private static final User OTHER_USER = mock(User.class);
   private static final Role ROLE_MANAGER = mock(Role.class);
+  private static final Role ROLE_IN_ORG = mock(Role.class);
   private static final Role ROLE_USER = mock(Role.class);
   private static final Set<Role> ROLES = new HashSet<>(Arrays.asList(ROLE_MANAGER, ROLE_USER));
   private static final Organization ORGANIZATION_COLLABORATIVE = mock(Organization.class);
@@ -71,7 +73,9 @@ public class UserAuthenticationServiceTest {
     willReturn(ORGANIZATION_COLLABORATIVE).given(ORGANIZATION_GROUP).getOrganization();
     willReturn(new HashSet<>(Collections.singletonList(ORGANIZATION_GROUP))).given(USER)
         .getOrganizationGroups();
-    willReturn(ORG_GROUP_AUTH_LEVEL).given(ORGANIZATION_GROUP).getAuthorityLevel();
+    willReturn(ORG_GROUP_AUTH_LEVEL).given(ORGANIZATION_GROUP).getHighestAuthorityLevel();
+    willReturn(ROLE_IN_ORG).given(ORGANIZATION_GROUP).getHighestRole();
+    willReturn(ROLE_IN_ORG_GROUP_NAME).given(ROLE_IN_ORG).getName();
 
     willReturn(false).given(ORGANIZATION_NON_COLLABORATIVE).isCollaborative();
     willReturn(true).given(ORGANIZATION_COLLABORATIVE).isCollaborative();
@@ -255,7 +259,7 @@ public class UserAuthenticationServiceTest {
   }
 
   @Test
-  public void givenOrganizationNotOwned_whenUpdateOrganization_thenItUpdatesAuthorityWithOrgGroup() {
+  public void givenOrganizationNotOwned_whenUpdateOrganization_thenItUpdatesAuthLevelWithOrgGroup() {
     Authentication authentication = mock(Authentication.class);
     UserAuthDetails authDetails = mock(UserAuthDetails.class);
     willReturn(ORGANIZATION_NON_COLLABORATIVE).given(authDetails).getLoggedOrganization();
@@ -279,6 +283,33 @@ public class UserAuthenticationServiceTest {
 
     assertThat(currentlyLoggedOrg).isEqualTo(ORGANIZATION_COLLABORATIVE);
     assertThat(highestAuth.getAuthorityLevel()).isEqualTo(ORG_GROUP_AUTH_LEVEL);
+  }
+
+  @Test
+  public void givenOrganizationNotOwned_whenUpdateOrganization_thenItUpdatesAuthRoleWithOrgGroup() {
+    Authentication authentication = mock(Authentication.class);
+    UserAuthDetails authDetails = mock(UserAuthDetails.class);
+    willReturn(ORGANIZATION_NON_COLLABORATIVE).given(authDetails).getLoggedOrganization();
+    willReturn(authDetails).given(authentication).getPrincipal();
+    willReturn(USER).given(authDetails).getCurrentUser();
+    SecurityContextHelper contextHelper = new SecurityContextHelper();
+    SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
+    UserAuthenticationService authService = new UserAuthenticationService(accountRepository,
+        contextHelper);
+
+    authService.setCurrentOrganization(ORGANIZATION_COLLABORATIVE);
+    Organization currentlyLoggedOrg = authService.getCurrentUserLoggedOrganization();
+    Optional<UserAuthDetails> userDetails = contextHelper.getCurrentContextAuthDetails();
+
+    assertThat(userDetails.isPresent()).isTrue();
+    List<Authority> authorities =
+        userDetails.get().getAuthorities().stream().map(Authority.class::cast)
+            .collect(Collectors.toList());
+    Authority highestAuth = Collections
+        .max(authorities, Comparator.comparing(Authority::getAuthorityLevel));
+
+    assertThat(currentlyLoggedOrg).isEqualTo(ORGANIZATION_COLLABORATIVE);
+    assertThat(highestAuth.getAuthority()).isEqualTo(ROLE_IN_ORG_GROUP_NAME);
   }
 
   @Test

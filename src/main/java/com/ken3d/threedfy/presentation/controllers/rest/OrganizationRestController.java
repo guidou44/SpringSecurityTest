@@ -28,20 +28,19 @@ public class OrganizationRestController {
   private final DtoMapper mapper;
 
   @Autowired
-  public OrganizationRestController(IUserService userService,
-      DtoMapper mapper) {
+  public OrganizationRestController(IUserService userService, DtoMapper mapper) {
     this.userService = userService;
     this.mapper = mapper;
   }
 
-  @RequestMapping(value = "/organization", method = RequestMethod.GET,
+  @RequestMapping(value = "/api/organization", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public OrganizationDto getCurrentOrganization() {
     Organization organization = userService.getCurrentUserLoggedOrganization();
     return mapper.map(organization, OrganizationDto.class);
   }
 
-  @RequestMapping(value = "/organizations", method = RequestMethod.GET,
+  @RequestMapping(value = "/api/organizations", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public List<OrganizationDto> getAllOrganizations() {
     User currentUser = userService.getCurrentUser();
@@ -60,14 +59,14 @@ public class OrganizationRestController {
         .collect(Collectors.toList());
   }
 
-  @RequestMapping(value = "/organization", method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/organization", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.OK)
   public void updateCurrentOrganization(@RequestBody @Valid OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
     userService.updateCurrentOrganization(organization);
   }
 
-  @RequestMapping(value = "/organization", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/organization", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
   public void createNewOrganizationAndMakeCurrent(@RequestBody @Valid OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);

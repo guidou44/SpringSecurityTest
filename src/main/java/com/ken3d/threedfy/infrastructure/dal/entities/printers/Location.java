@@ -1,6 +1,5 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.printers;
 
-import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -12,8 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Localisation")
-public class Localisation extends PrinterEntityBase {
+@Table(name = "Location")
+public class Location extends PrinterEntityBase {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,12 +40,12 @@ public class Localisation extends PrinterEntityBase {
   @Column(name = "County", nullable = true)
   private String county;
 
+  @OneToMany(mappedBy = "location")
+  private Set<PrinterCluster> printerClusters = new HashSet<>();
+
   public String getAddress() {
     return address;
   }
-
-  @OneToMany(mappedBy = "localisation")
-  private Set<PrinterCluster> printerClusters = new HashSet<>();
 
   public void setAddress(String address) {
     this.address = address;

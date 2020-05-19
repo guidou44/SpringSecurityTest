@@ -23,8 +23,8 @@ public class PrinterCluster extends PrinterEntityBase {
   private String name;
 
   @ManyToOne
-  @JoinColumn(name = "Localisation_FK", referencedColumnName = "Id", nullable = false)
-  private Localisation localisation;
+  @JoinColumn(name = "Location_FK", referencedColumnName = "Id", nullable = false)
+  private Location location;
 
   @ManyToOne
   @JoinColumn(name = "Organization_FK", referencedColumnName = "Id", nullable = false)
@@ -46,13 +46,13 @@ public class PrinterCluster extends PrinterEntityBase {
     this.name = name;
   }
 
-  public Localisation getLocalisation() {
-    return localisation;
+  public Location getLocation() {
+    return location;
   }
 
-  public void setLocalisation(
-      Localisation localisation) {
-    this.localisation = localisation;
+  public void setLocation(
+      Location location) {
+    this.location = location;
   }
 
   public Organization getOrganization() {

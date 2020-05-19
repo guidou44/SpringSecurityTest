@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.ken3d.threedfy.HibernateConfiguration;
+import com.ken3d.threedfy.presentation.controllers.PingController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
     excludeAutoConfiguration = HibernateConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("nosecurity")
-public class PingControllerTest {
+public class PingEndPointTest {
 
   @Autowired
   private MockMvc mockMvc;

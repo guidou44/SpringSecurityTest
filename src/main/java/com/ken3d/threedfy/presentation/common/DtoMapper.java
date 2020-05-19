@@ -1,13 +1,10 @@
 package com.ken3d.threedfy.presentation.common;
 
-import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
-import com.ken3d.threedfy.infrastructure.dal.entities.printers.Location;
-import com.ken3d.threedfy.presentation.printer.LocationDto;
-import com.ken3d.threedfy.presentation.user.OrganizationDto;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +16,7 @@ public class DtoMapper {
   @Autowired
   public DtoMapper(ModelMapper mapper) {
     modelMapper = mapper;
+    modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
     addMappingConfigurations();
   }
 
@@ -28,7 +26,6 @@ public class DtoMapper {
 
   private void addMappingConfigurations() {
     addUserMappingConfigurations();
-    addPrinterClusterMappingConfigurations();
   }
 
   private void addUserMappingConfigurations() {
@@ -39,9 +36,5 @@ public class DtoMapper {
         skip(destination.getMatchingPassword());
       }
     });
-  }
-
-  private void addPrinterClusterMappingConfigurations() {
-
   }
 }

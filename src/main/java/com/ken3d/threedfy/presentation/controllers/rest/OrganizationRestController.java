@@ -35,6 +35,7 @@ public class OrganizationRestController {
 
   @RequestMapping(value = "/api/organization", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
   public OrganizationDto getCurrentOrganization() {
     Organization organization = userService.getCurrentUserLoggedOrganization();
     return mapper.map(organization, OrganizationDto.class);
@@ -42,6 +43,7 @@ public class OrganizationRestController {
 
   @RequestMapping(value = "/api/organizations", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
   public List<OrganizationDto> getAllOrganizations() {
     User currentUser = userService.getCurrentUser();
 
@@ -70,6 +72,7 @@ public class OrganizationRestController {
   @ResponseStatus(HttpStatus.CREATED)
   public void createNewOrganizationAndMakeCurrent(@RequestBody @Valid OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
+    organization.setOwner(userService.getCurrentUser());
     userService.createOrganizationForUserAndSetCurrent(organization);
   }
 }

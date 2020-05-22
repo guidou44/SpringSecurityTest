@@ -1,21 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>3Dify</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta content="Desc**" name="description">
-  <meta content="3Dify" name="author">
-  <!-- App favicon -->
-  <link rel="shortcut icon" href="/images/favicon.ico">
-
-  <!-- App css -->
-  <link href="/css/icons.css" rel="stylesheet" type="text/css">
-  <link href="/css/app.css" rel="stylesheet" type="text/css" id="light-style">
-  <link href="/css/app-dark.css" rel="stylesheet" type="text/css" id="dark-style" disabled="disabled">
-
-</head>
-<body class="" data-layout-config="{&quot;darkMode&quot;:false}">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments/header :: header"></head>
+<body class="" data-layout-config="{&quot;darkMode&quot;:true}">
 
 <!-- NAVBAR START -->
 <nav class="navbar navbar-expand-lg py-lg-3 navbar-dark">

@@ -39,7 +39,7 @@ File: Main Css File
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1367px;
-  --font-family-sans-serif: "Nunito", sans-serif;
+  --font-family-sans-serif: "Proxima Nova", sans-serif;
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -62,7 +62,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.5;
@@ -5513,7 +5513,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -5615,7 +5615,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -9957,7 +9957,7 @@ body {
 .left-side-menu {
   width: 260px;
   z-index: 10;
-  background: linear-gradient(135deg, #8f75da 0%, #727cf5 60%);
+  background: linear-gradient(135deg, #5252f2 0%, #5252f2 60%);
   bottom: 0;
   position: fixed;
   transition: all .2s ease-out;
@@ -10046,7 +10046,7 @@ body[data-leftbar-compact-mode="condensed"] .wrapper .left-side-menu .simplebar-
 body[data-leftbar-compact-mode="condensed"] .wrapper .left-side-menu .logo {
   width: 70px;
   z-index: 1;
-  background: linear-gradient(135deg, #8f75da 0%, #727cf5 60%);
+  background: linear-gradient(135deg, #5252f2 0%, #5252f2 60%);
 }
 body[data-leftbar-compact-mode="condensed"] .wrapper .help-box {
   display: none;
@@ -10093,7 +10093,7 @@ body[data-leftbar-compact-mode="condensed"] .side-nav .side-nav-item:hover .side
   position: relative;
   width: 260px;
   color: #fff;
-  background: linear-gradient(135deg, #8f75da 0%, #727cf5 60%);
+  background: linear-gradient(135deg, #5252f2 0%, #5252f2 60%);
 }
 body[data-leftbar-compact-mode="condensed"] .side-nav .side-nav-item:hover .side-nav-link span {
   display: inline;
@@ -10106,7 +10106,7 @@ body[data-leftbar-compact-mode="condensed"] .side-nav .side-nav-item:hover > ul 
   height: auto !important;
   padding: 5px 0;
   z-index: 9999;
-  background: linear-gradient(135deg, #8f75da 0%, #727cf5 60%);
+  background: linear-gradient(135deg, #5252f2 0%, #5252f2 60%);
 }
 body[data-leftbar-compact-mode="condensed"] .side-nav .side-nav-item:hover > ul a {
   padding: 8px 20px;
@@ -11050,30 +11050,30 @@ body[data-layout="topnav"] .container-fluid, body[data-layout="topnav"] .contain
   }
 }
 @font-face {
-  font-family: 'Nunito';
-  src: url("/fonts/Nunito-Light.eot");
-  src: local("Nunito Light"), local("Nunito-Light"), url("/fonts/Nunito-Light.eot?#iefix") format("embedded-opentype"), url("fonts/Nunito-Light.woff") format("woff"), url("fonts/Nunito-Light.ttf") format("truetype"), url("fonts/Nunito-Light.svg#Roboto") format("svg");
+  font-family: 'Proxima-nova';
+  src: url("/fonts/ProximaNova-light.eot");
+  src: local("Proxima Nova Light"), local("Proxima-Nova-Light"), url("/fonts/ProximaNova-light.eot") format("embedded-opentype"), url("fonts/ProximaNova-light.woff") format("woff"), url("fonts/ProximaNova-light.ttf") format("truetype"), url("fonts/ProximaNova-light.svg") format("svg");
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
-  font-family: 'Nunito';
-  src: url("/fonts/Nunito-Regular.eot");
-  src: local("Nunito Regular"), local("Nunito-Regular"), url("/fonts/Nunito-Regular.eot?#iefix") format("embedded-opentype"), url("/fonts/Nunito-Regular.woff") format("woff"), url("/fonts/Nunito-Regular.ttf") format("truetype"), url("/fonts/Nunito-Regular.svg#Roboto") format("svg");
+  font-family: 'Proxima-nova';
+  src: url("/fonts/ProximaNova-Regular.eot");
+  src: local("Proxima Nova Regular"), local("Proxima-Nova-Regular"), url("/fonts/ProximaNova-Regular.eot") format("embedded-opentype"), url("/fonts/ProximaNova-Regular.woff") format("woff"), url("/fonts/ProximaNova-Regular.ttf") format("truetype"), url("/fonts/ProximaNova-Regular.svg") format("svg");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
-  font-family: 'Nunito';
-  src: url("/fonts/Nunito-SemiBold.eot");
-  src: local("Nunito SemiBold"), local("Nunito-SemiBold"), url("/fonts/Nunito-SemiBold.eot?#iefix") format("embedded-opentype"), url("/fonts/Nunito-SemiBold.woff") format("woff"), url("/fonts/Nunito-SemiBold.ttf") format("truetype"), url("/fonts/Nunito-SemiBold.svg#Roboto") format("svg");
+  font-family: 'Proxima-nova';
+  src: url("/fonts/ProximaNova-Extrabld.eot");
+  src: local("Proxima Nova Extrabld"), local("Proxima-Nova-Extrabld"), url("/fonts/ProximaNova-Extrabld.eot") format("embedded-opentype"), url("/fonts/ProximaNova-Extrabld.woff") format("woff"), url("/fonts/ProximaNova-Extrabld.ttf") format("truetype"), url("/fonts/ProximaNova-Extrabld.svg") format("svg");
   font-weight: 600;
   font-style: normal;
 }
 @font-face {
-  font-family: 'Nunito';
-  src: url("/fonts/Nunito-Bold.eot");
-  src: local("Nunito Bold"), local("Nunito-Bold"), url("/fonts/Nunito-Bold.eot?#iefix") format("embedded-opentype"), url("/fonts/Nunito-Bold.woff") format("woff"), url("/fonts/Nunito-Bold.ttf") format("truetype"), url("/fonts/Nunito-Bold.svg#Roboto") format("svg");
+  font-family: 'Proxima-nova';
+  src: url("/fonts/ProximaNova-Extrabld.eot");
+  src: local("Proxima Nova Extrabld"), local("Proxima-Nova-Extrabld"), url("/fonts/ProximaNova-Extrabld.eot") format("embedded-opentype"), url("/fonts/ProximaNova-Extrabld.woff") format("woff"), url("/fonts/ProximaNova-Extrabld.ttf") format("truetype"), url("/fonts/ProximaNova-Extrabld.svg") format("svg");
   font-weight: 700;
   font-style: normal;
 }
@@ -15123,7 +15123,7 @@ body.auth-fluid-pages[data-leftbar-compact-mode=condensed] {
   min-height: 10px !important;
 }
 .apex-charts text {
-  font-family: "Nunito", sans-serif !important;
+  font-family: "Proxima Nova", sans-serif !important;
   fill: #adb5bd;
 }
 .apex-charts .apexcharts-canvas {
@@ -15132,7 +15132,7 @@ body.auth-fluid-pages[data-leftbar-compact-mode=condensed] {
 
 .apexcharts-tooltip-title,
 .apexcharts-tooltip-text {
-  font-family: "Nunito", sans-serif !important;
+  font-family: "Proxima Nova", sans-serif !important;
 }
 
 .apexcharts-legend-series {
@@ -15146,12 +15146,12 @@ body.auth-fluid-pages[data-leftbar-compact-mode=condensed] {
 
 .apexcharts-legend-text {
   color: #98a6ad !important;
-  font-family: "Nunito", sans-serif !important;
+  font-family: "Proxima Nova", sans-serif !important;
 }
 
 .apexcharts-yaxis text,
 .apexcharts-xaxis text {
-  font-family: "Nunito", sans-serif !important;
+  font-family: "Proxima Nova", sans-serif !important;
   fill: #adb5bd;
 }
 
@@ -15201,7 +15201,7 @@ body.auth-fluid-pages[data-leftbar-compact-mode=condensed] {
 }
 
 .britechart, .tick text {
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   font-size: 0.75rem;
 }
 
@@ -15483,7 +15483,7 @@ div.dt-button-info h2 {
 }
 
 .daterangepicker {
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   border: 1px solid #e4eaf2;
   box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
   background-color: #fff;
@@ -15695,7 +15695,7 @@ div.dt-button-info h2 {
   border: none;
   background: #343a40;
   color: #f1f3fa;
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   font-size: 0.9rem;
   padding: 5px 8px;
 }
@@ -16127,13 +16127,13 @@ body[data-leftbar-theme="dark"] .side-nav .side-nav-forth-level li.active > a {
 
 .jq-toast-single {
   padding: 15px;
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   background-color: #5252f2;
   font-size: 13px;
   line-height: 22px;
 }
 .jq-toast-single h2 {
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
 }
 .jq-toast-single a {
   font-size: 0.9rem;
@@ -16415,7 +16415,7 @@ body[data-leftbar-theme="dark"] .side-nav .side-nav-forth-level li.active > a {
 }
 
 .tt-highlight {
-  font-family: "Nunito", sans-serif;
+  font-family: "Proxima Nova", sans-serif;
 }
 
 .typeahead-empty-message {
@@ -16442,7 +16442,7 @@ body[data-leftbar-theme="dark"] .side-nav .side-nav-forth-level li.active > a {
   color: #000 !important;
   font-size: 12px !important;
   line-height: 18px !important;
-  font-family: "Nunito", sans-serif !important;
+  font-family: "Proxima Nova", sans-serif !important;
   font-weight: 700 !important;
 }
 

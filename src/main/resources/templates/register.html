@@ -1,22 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-  <meta charset="utf-8">
-  <title>3Dify</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta content="Desc**" name="description">
-  <meta content="3Dify" name="author">
-  <!-- App favicon -->
-  <link rel="shortcut icon" href="/images/favicon.ico">
-
-  <!-- App css -->
-  <link href="/css/icons.css" rel="stylesheet" type="text/css">
-  <link href="/css/app.css" rel="stylesheet" type="text/css" id="light-style">
-  <link href="/css/app-dark.css" rel="stylesheet" type="text/css" id="dark-style" disabled="disabled">
-
-</head>
-
-<body class="authentication-bg right-bar-enabled" data-layout-config="{&quot;leftSideBarTheme&quot;:&quot;dark&quot;,&quot;layoutBoxed&quot;:false, &quot;leftSidebarCondensed&quot;:false, &quot;leftSidebarScrollable&quot;:false,&quot;darkMode&quot;:false, &quot;showRightSidebarOnStart&quot;: true}" data-leftbar-theme="dark">
+<head th:replace="fragments/header :: header"></head>
+<body class="authentication-bg right-bar-enabled" data-layout-config="{&quot;leftSideBarTheme&quot;:&quot;dark&quot;,&quot;layoutBoxed&quot;:false, &quot;leftSidebarCondensed&quot;:false, &quot;leftSidebarScrollable&quot;:false,&quot;darkMode&quot;:true, &quot;showRightSidebarOnStart&quot;: true}" data-leftbar-theme="dark">
 <div class="account-pages mt-5 mb-5">
   <div class="container">
     <div class="row justify-content-center">

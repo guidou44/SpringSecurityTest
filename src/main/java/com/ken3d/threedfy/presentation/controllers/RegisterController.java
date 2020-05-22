@@ -64,13 +64,15 @@ public class RegisterController {
       String appUrl = request.getContextPath();
       eventPublisher
           .publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
+
+      ModelAndView mav = new ModelAndView("confirm-email");
+      mav.addObject("email", user.getEmail());
+      return mav;
     } catch (UserAlreadyExistException uaeEx) {
       ModelAndView mav = new ModelAndView("register", "user", userDto);
       mav.addObject("message", "An account for that username/email already exists.");
       return mav;
     }
-
-    return new ModelAndView("confirm-email");
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -128,7 +130,7 @@ public class RegisterController {
     user.setEnabled(true);
     userService.saveRegisteredUser(user);
 
-    return "redirect:/login";
+    return "redirect:/login?verified=true";
   }
 
   @GetMapping("/confirm-email")

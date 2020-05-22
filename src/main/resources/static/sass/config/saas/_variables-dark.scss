@@ -5,15 +5,16 @@
 //
 
 // stylelint-disable
-$gray-100: #404954;
-$gray-200: #37404a;
-$gray-300: #464f5b;
-$gray-400: #8391a2;
-$gray-500: #aab8c5;
-$gray-600: #ced4da;
-$gray-700: #dee2e6;
-$gray-800: #e3eaef;
-$gray-900: #f1f1f1;
+$gray-100: #1d1d1d;
+$gray-200: #212121;
+$gray-300: #242424;
+$gray-400: #272727;
+$gray-500: #2c2c2c;
+$gray-600: #2d2d2d;
+$gray-700: #323232;
+$gray-800: #353535;
+$gray-900: #373737;
+$gray-1000: #565656;
 
 $grays: ();
 $grays: map-merge((
@@ -28,11 +29,11 @@ $grays: map-merge((
   "900": $gray-900
 ), $grays);
 
-$blue:       #2c8ef8;
-$indigo:     #727cf5;
+$blue:       #5252f2;
+$indigo:     #5252f2;
 $purple:     #6b5eae;
 $pink:       #ff679b;
-$red:        #fa5c7c;
+$red:        #b00020;
 $orange:     #fd7e14;
 $yellow:     #ffbc00;
 $green:      #0acf97;
@@ -123,14 +124,14 @@ $sizes: map-merge((
 //
 // Settings for the `<body>` element.
 
-$body-bg:                   #343a40;
-$body-color:                $gray-500;
+$body-bg:                   #121212;
+$body-color:                #b0b3b8;
 
 // Links
 //
 // Style anchor elements.
 
-$link-color:                $primary;
+$link-color:                #e4e6eb;
 $link-hover-color:          darken($link-color, 15%);
 $link-hover-decoration:     none;
 
@@ -188,7 +189,7 @@ $border-color:                $gray-300;
 // Font, line-height, and color for body text, headings, and more.
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif:      'Nunito', sans-serif;
+$font-family-sans-serif:      'Proxima Nova', sans-serif;
 $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $font-family-base:            $font-family-sans-serif;
 
@@ -197,7 +198,7 @@ $font-size-base:              0.875rem;
 $font-weight-bold:            700;
 
 $headings-margin-bottom:      $spacer;
-$headings-font-weight:        400;
+$headings-font-weight:        700;
 $headings-line-height:        1.1;
 
 $h1-font-size:                2.25rem;
@@ -206,6 +207,19 @@ $h3-font-size:                1.5rem;
 $h4-font-size:                1.125rem;
 $h5-font-size:                0.9375rem;
 $h6-font-size:                0.75rem;
+/*$font-size-base:              1rem;
+$font-weight-bold:            700;
+
+$headings-margin-bottom:      $spacer;
+$headings-font-weight:        700;
+$headings-line-height:        1.1;
+
+$h1-font-size:                2.375rem;
+$h2-font-size:                2rem;
+$h3-font-size:                1.625rem;
+$h4-font-size:                1.250rem;
+$h5-font-size:                1.0625rem;
+$h6-font-size:                0.875rem;*/
 
 $display-line-height:         $headings-line-height;
 
@@ -213,7 +227,7 @@ $lead-font-size:              ($font-size-base * 1.25);
 
 $small-font-size:             0.75rem;
 
-$text-muted:                  $gray-400;
+$text-muted:                  #6a6a6a;
 
 $blockquote-font-size:        ($font-size-base * 1.25);
 
@@ -310,17 +324,17 @@ $input-padding-y-lg:                    $input-btn-padding-y-lg;
 $input-padding-x-lg:                    $input-btn-padding-x-lg;
 $input-line-height-lg:                  $input-btn-line-height-lg;
 
-$input-bg:                              $gray-100;
+$input-bg:                              darken($gray-100,2.5%);
 
-$input-color:                           $gray-800;
+$input-color:                           $gray-900;
 $input-border-width:                    1px;
-$input-border-color:                    lighten($gray-100,3%);
+$input-border-color:                    darken($gray-100,4%);
 $input-border-radius:                   0.25rem;
 
-$input-focus-bg:                        lighten($input-bg,2.5%);
-$input-focus-color:                     $gray-800;
+$input-focus-bg:                        darken($input-bg,3.5%);
+$input-focus-color:                     $gray-900;
 $input-focus-box-shadow:                none;
-$input-focus-border-color:              lighten($input-border-color,5%);
+$input-focus-border-color:              darken($input-border-color,5%);
 
 
 $input-disabled-bg:                     $input-focus-bg;
@@ -507,7 +521,8 @@ $card-spacer-x:                     $spacer;
 $card-border-color:                 lighten($gray-300,3%);
 $card-cap-bg:                       $gray-300;
 
-$card-box-shadow:                   0 0 35px 0 rgba(49,57,66,.5);
+//$card-box-shadow:                   0 0 35px 0 rgba(49,57,66,.5);
+$card-box-shadow:                   0 0 35px 0 rgba(37, 37, 37, 0.5);
 
 
 // Tooltips

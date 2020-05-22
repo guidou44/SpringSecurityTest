@@ -14,6 +14,7 @@ $gray-600: #98a6ad;
 $gray-700: #6c757d;
 $gray-800: #343a40 !default;
 $gray-900: #313a46;
+$gray-1000: #98a6ad;
 $black:    #000 !default;
 
 $grays: ();
@@ -187,7 +188,7 @@ $caret-width:                 .25em;
 // Font, line-height, and color for body text, headings, and more.
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif:      'Nunito', sans-serif;
+$font-family-sans-serif:      'Proxima Nova', sans-serif;
 $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 $font-family-base:            $font-family-sans-serif;
 

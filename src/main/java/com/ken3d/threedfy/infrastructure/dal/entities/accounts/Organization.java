@@ -18,6 +18,7 @@ import javax.persistence.Table;
 @Table
 public class Organization extends AccountEntityBase {
 
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "Id")

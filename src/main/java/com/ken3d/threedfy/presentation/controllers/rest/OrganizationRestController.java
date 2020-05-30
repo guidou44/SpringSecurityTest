@@ -9,6 +9,7 @@ import com.ken3d.threedfy.presentation.user.OrganizationDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,21 +28,22 @@ public class OrganizationRestController {
   private final DtoMapper mapper;
 
   @Autowired
-  public OrganizationRestController(IUserService userService,
-      DtoMapper mapper) {
+  public OrganizationRestController(IUserService userService, DtoMapper mapper) {
     this.userService = userService;
     this.mapper = mapper;
   }
 
-  @RequestMapping(value = "/organization", method = RequestMethod.GET,
+  @RequestMapping(value = "/api/organization", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
   public OrganizationDto getCurrentOrganization() {
     Organization organization = userService.getCurrentUserLoggedOrganization();
     return mapper.map(organization, OrganizationDto.class);
   }
 
-  @RequestMapping(value = "/organizations", method = RequestMethod.GET,
+  @RequestMapping(value = "/api/organizations", method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
   public List<OrganizationDto> getAllOrganizations() {
     User currentUser = userService.getCurrentUser();
 
@@ -59,17 +61,18 @@ public class OrganizationRestController {
         .collect(Collectors.toList());
   }
 
-  @RequestMapping(value = "/organization", method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/organization", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.OK)
-  public void updateCurrentOrganization(@RequestBody OrganizationDto orgDto) {
+  public void updateCurrentOrganization(@RequestBody @Valid OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
     userService.updateCurrentOrganization(organization);
   }
 
-  @RequestMapping(value = "/organization", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/organization", method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  public void createNewOrganizationAndMakeCurrent(@RequestBody OrganizationDto orgDto) {
+  public void createNewOrganizationAndMakeCurrent(@RequestBody @Valid OrganizationDto orgDto) {
     Organization organization = mapper.map(orgDto, Organization.class);
+    organization.setOwner(userService.getCurrentUser());
     userService.createOrganizationForUserAndSetCurrent(organization);
   }
 }

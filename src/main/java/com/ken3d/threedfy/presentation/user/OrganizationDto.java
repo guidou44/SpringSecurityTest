@@ -1,9 +1,17 @@
 package com.ken3d.threedfy.presentation.user;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class OrganizationDto {
 
   private int id;
+
+  @NotNull
+  @NotEmpty
   private String name;
+
+  @NotNull
   private UserDto owner;
   private boolean isCollaborative;
 

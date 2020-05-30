@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.ken3d.threedfy.HibernateConfiguration;
+import com.ken3d.threedfy.presentation.controllers.DashboardController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +16,31 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = LoginController.class, excludeAutoConfiguration = HibernateConfiguration.class)
+@WebMvcTest(controllers = DashboardController.class, excludeAutoConfiguration = HibernateConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("nosecurity")
-public class LoginControllerTest {
+<<<<<<< HEAD:src/test/java/com/ken3d/threedfy/presentation/controllers/DashboardControllerTest.java
+public class DashboardControllerTest {
+=======
+public class DashboardEndPointTest {
+>>>>>>> master:src/test/java/com/ken3d/threedfy/presentation/controllers/DashboardEndPointTest.java
 
   @Autowired
   private MockMvc mockMvc;
 
   @Test
-  public void givenLoginController_whenGetLogin_thenItReturnsProperView() throws Exception {
+  public void givenMainController_whenGetIndex_thenItReturnsProperView() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/login"))
+        .perform(MockMvcRequestBuilders.get("/"))
         .andExpect(status().isOk())
-        .andExpect(view().name("login"));
+        .andExpect(view().name("index"));
+  }
+
+  @Test
+  public void givenMainController_whenGetDashboard_thenItReturnsProperView() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/dashboard"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("dashboard"));
   }
 }

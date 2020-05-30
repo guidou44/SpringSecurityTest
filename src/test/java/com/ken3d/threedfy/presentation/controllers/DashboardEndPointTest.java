@@ -19,11 +19,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @WebMvcTest(controllers = DashboardController.class, excludeAutoConfiguration = HibernateConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("nosecurity")
-<<<<<<< HEAD:src/test/java/com/ken3d/threedfy/presentation/controllers/DashboardControllerTest.java
-public class DashboardControllerTest {
-=======
+
 public class DashboardEndPointTest {
->>>>>>> master:src/test/java/com/ken3d/threedfy/presentation/controllers/DashboardEndPointTest.java
+
 
   @Autowired
   private MockMvc mockMvc;

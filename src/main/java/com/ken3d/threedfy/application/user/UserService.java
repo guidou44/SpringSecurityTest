@@ -1,18 +1,19 @@
-package com.ken3d.threedfy.domain.user.registration;
+package com.ken3d.threedfy.application.user;
 
+import com.ken3d.threedfy.application.user.exception.NonExistingOrganizationException;
 import com.ken3d.threedfy.domain.dao.IEntityRepository;
 import com.ken3d.threedfy.domain.user.exceptions.InvalidVerificationTokenException;
+import com.ken3d.threedfy.domain.user.security.UserAuthenticationService;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.AccountEntityBase;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Organization;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.Role;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.User;
 import com.ken3d.threedfy.infrastructure.dal.entities.accounts.VerificationToken;
-import com.ken3d.threedfy.presentation.user.IUserRegistrationService;
+import com.ken3d.threedfy.presentation.user.IUserService;
 import com.ken3d.threedfy.presentation.user.UserDto;
 import com.ken3d.threedfy.presentation.user.exceptions.UserAlreadyExistException;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -22,16 +23,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class UserRegistrationService implements IUserRegistrationService {
+public class UserService implements IUserService {
 
   private final IEntityRepository<AccountEntityBase> accountRepository;
+  private final UserAuthenticationService userAuthService;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserRegistrationService(IEntityRepository<AccountEntityBase> accountRepository,
-      PasswordEncoder passwordEncoder) {
+  public UserService(IEntityRepository<AccountEntityBase> accountRepository,
+      PasswordEncoder passwordEncoder, UserAuthenticationService userAuthService) {
     this.accountRepository = accountRepository;
     this.passwordEncoder = passwordEncoder;
+    this.userAuthService = userAuthService;
   }
 
   @Override
@@ -44,13 +47,13 @@ public class UserRegistrationService implements IUserRegistrationService {
     setBasicUserRole(user);
     user = accountRepository.create(user);
 
-    createNewOrganization(user);
+    createNewDefaultOrganization(user);
 
     return user;
   }
 
   @Override
-  public User getUser(String verificationToken) {
+  public User getUserForToken(String verificationToken) {
     Optional<VerificationToken> tokenEntity = getVerificationToken(verificationToken);
     if (tokenEntity.isPresent()) {
       return tokenEntity.get().getUser();
@@ -79,6 +82,36 @@ public class UserRegistrationService implements IUserRegistrationService {
     return accountRepository.select(VerificationToken.class, vt -> vt.getToken().equals(token));
   }
 
+  @Override
+  public Organization getCurrentUserLoggedOrganization() {
+    return userAuthService.getCurrentUserLoggedOrganization();
+  }
+
+  @Override
+  public User getCurrentUser() {
+    return userAuthService.getCurrentUser();
+  }
+
+  @Override
+  public void updateCurrentOrganization(Organization organization) {
+    Optional<Organization> orgWithReference =
+        accountRepository.select(Organization.class, organization.getId());
+
+    if (orgWithReference.isPresent()) {
+      userAuthService.setCurrentOrganization(orgWithReference.get());
+      return;
+    }
+
+    throw new NonExistingOrganizationException();
+  }
+
+  @Override
+  public void createOrganizationForUserAndSetCurrent(Organization organization) {
+    organization.setOwner(getCurrentUser());
+    organization = accountRepository.create(organization);
+    updateCurrentOrganization(organization);
+  }
+
   private boolean emailExist(String email) {
     return accountRepository.selectAll(User.class, u -> u.getEmail().equals(email)).size() > 0;
   }
@@ -104,7 +137,7 @@ public class UserRegistrationService implements IUserRegistrationService {
     userRole.ifPresent(role -> user.setRoles(new HashSet<>(Collections.singletonList(role))));
   }
 
-  private void createNewOrganization(User owner) {
+  private void createNewDefaultOrganization(User owner) {
     Organization organization = new Organization();
     organization.setCollaborative(false);
     organization.setName(owner.getUsername());

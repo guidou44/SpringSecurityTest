@@ -23,7 +23,7 @@ public class RegistrationListenerTest {
   private static final String BASE_APP_URL = "http://test.com";
   private static final String CONFIRM_EMAIL_MESSAGE = "Confirm test email please";
 
-  private final IUserRegistrationService service = mock(IUserRegistrationService.class);
+  private final IUserService service = mock(IUserService.class);
   private final JavaMailSender mailSender = mock(JavaMailSender.class);
   private final Environment env = mock(Environment.class);
   private final ArgumentCaptor<SimpleMailMessage> emailArgumentCaptor = ArgumentCaptor

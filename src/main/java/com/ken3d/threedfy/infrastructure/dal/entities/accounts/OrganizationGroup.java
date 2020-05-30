@@ -1,18 +1,21 @@
 package com.ken3d.threedfy.infrastructure.dal.entities.accounts;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "Organization_Group")
@@ -33,9 +36,13 @@ public class OrganizationGroup extends AccountEntityBase {
   @ManyToMany(mappedBy = "organizationGroups")
   private Set<User> users = new HashSet<>();
 
-  @Column(name = "Authority_Level", nullable = false)
-  @ColumnDefault("-1")
-  private int authorityLevel;
+  @ManyToMany(cascade = {CascadeType.ALL})
+  @JoinTable(
+      name = "OrganizationGroup_Role",
+      joinColumns = {@JoinColumn(name = "OrganizationGroup_FK", referencedColumnName = "Id")},
+      inverseJoinColumns = {@JoinColumn(name = "Role_FK", referencedColumnName = "Id")}
+  )
+  private Set<Role> roles = new HashSet<>();
 
   public String getName() {
     return name;
@@ -70,6 +77,17 @@ public class OrganizationGroup extends AccountEntityBase {
     this.id = id;
   }
 
+  public int getHighestAuthorityLevel() {
+    Set<Role> roles = this.getRoles();
+    return getHighestRole().getAuthorityLevel();
+  }
+
+  public Role getHighestRole() {
+    Set<Role> roles = this.getRoles();
+    return Collections
+        .max(roles, Comparator.comparing(Role::getAuthorityLevel));
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -85,11 +103,11 @@ public class OrganizationGroup extends AccountEntityBase {
         && Objects.equals(users, that.users);
   }
 
-  public int getAuthorityLevel() {
-    return authorityLevel;
+  public Set<Role> getRoles() {
+    return roles;
   }
 
-  public void setAuthorityLevel(int authorityLevel) {
-    this.authorityLevel = authorityLevel;
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
   }
 }

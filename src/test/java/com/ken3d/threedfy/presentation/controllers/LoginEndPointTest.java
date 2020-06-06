@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.ken3d.threedfy.HibernateConfiguration;
+import com.ken3d.threedfy.presentation.controllers.LoginController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @WebMvcTest(controllers = LoginController.class, excludeAutoConfiguration = HibernateConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("nosecurity")
-public class LoginControllerTest {
+public class LoginEndPointTest {
 
   @Autowired
   private MockMvc mockMvc;

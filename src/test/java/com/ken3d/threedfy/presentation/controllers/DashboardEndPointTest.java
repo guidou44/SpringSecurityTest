@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.ken3d.threedfy.HibernateConfiguration;
+import com.ken3d.threedfy.presentation.controllers.DashboardController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,43 +14,31 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(
-    controllers = PingController.class,
-    excludeAutoConfiguration = HibernateConfiguration.class)
+@WebMvcTest(controllers = DashboardController.class, excludeAutoConfiguration = HibernateConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("nosecurity")
-public class PingControllerTest {
+
+public class DashboardEndPointTest {
+
 
   @Autowired
   private MockMvc mockMvc;
 
   @Test
-  public void givenPingController_whenGetPing_thenItReturnsProperView() throws Exception {
+  public void givenMainController_whenGetIndex_thenItReturnsProperView() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/ping"))
+        .perform(MockMvcRequestBuilders.get("/"))
         .andExpect(status().isOk())
         .andExpect(view().name("index"));
   }
 
   @Test
-  public void givenPingController_whenInternalServerError_thenItReturnsProperView()
-      throws Exception {
+  public void givenMainController_whenGetDashboard_thenItReturnsProperView() throws Exception {
     mockMvc
-        .perform(MockMvcRequestBuilders.get("/internalservererror"))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isInternalServerError())
-        .andExpect(view().name("error"));
-  }
-
-  @Test
-  public void givenPingController_whenBadRequest_thenItReturnsProperView() throws Exception {
-    mockMvc
-        .perform(MockMvcRequestBuilders.get("/badrequesterror"))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isBadRequest())
-        .andExpect(view().name("error"));
+        .perform(MockMvcRequestBuilders.get("/dashboard"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("dashboard"));
   }
 }

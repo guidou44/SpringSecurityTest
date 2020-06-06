@@ -76,7 +76,7 @@ public class RegisterController {
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler({BindException.class })
+  @ExceptionHandler({BindException.class})
   public ModelAndView validationError(BindException ex) {
     List<String> errorMessages = getErrorMessages(ex);
 
